@@ -4,7 +4,7 @@ from django.db.models import UniqueConstraint
 
 class Outlet(models.Model):
     type = models.ForeignKey(
-        'OutletTypes',
+        'OutletType',
         models.DO_NOTHING,
         db_comment='Тип здания',
         help_text='Выберите тип здания.'
