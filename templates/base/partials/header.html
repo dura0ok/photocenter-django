@@ -4,14 +4,29 @@
     </div>
     <ul class="menu">
         <li class="user-dropdown">
-            <span class="user-label">Привет, User. Ваша роль: Администратор</span>
+            <span class="user-label">
+                {% if user.is_authenticated %}
+                    <p>Welcome, {{ user.username }}!</p>
+                {% else %}
+                    <p>Привет, Гость!</p>
+                {% endif %}
+            </span>
             <div class="dropdown-block">
                 <span class="dropdown-arrow">&#9660;</span>
                 <div class="dropdown-menu">
                     <ul>
                         <li><a href="/static">Главная</a></li>
-                        <li><a href="/pages/queries.html">Доступные запросы</a></li>
-                        <li><a href="#">Выход</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="/pages/queries.html">Доступные запросы</a></li>
+                            <form id="logout-form" action="{% url 'logout' %}" method="post">
+                                {% csrf_token %}
+                                <li>
+                                    <button type="submit">Выход</button>
+                                </li>
+                            </form>
+                        {% else %}
+                            <li><a href="{% url 'login' %}">Авторизация</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
