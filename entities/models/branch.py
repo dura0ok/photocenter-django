@@ -3,7 +3,7 @@ from django.db import models
 
 class Branch(models.Model):
     outlet = models.OneToOneField(
-        'Outlets', models.DO_NOTHING,
+        'entities.models.outlet.Outlet', models.DO_NOTHING,
         primary_key=True,
         db_comment='Привязка к зданию',
         help_text='Связь со зданием в котором расположен филиал'

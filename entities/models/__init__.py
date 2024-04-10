@@ -1,7 +1,7 @@
 from .outlet_types import OutletTypes
-from .outlets import Outlets
+from .outlet import Outlet
 from .client import Client
 from .branch import Branch
 from .kiosk import Kiosk
 
-__all__ = ['Outlets', 'OutletTypes', 'Client', 'Branch', 'Kiosk']
+__all__ = ['Outlet', 'OutletTypes', 'Client', 'Branch', 'Kiosk']

@@ -5,7 +5,7 @@ from entities.models import Branch
 
 class Kiosk(models.Model):
     outlet = models.OneToOneField(
-        'Outlets',
+        'entities.models.outlet.Outlet',
         models.DO_NOTHING,
         primary_key=True,
         db_comment='Здание где расположен',

@@ -3,7 +3,7 @@ from django.db import models
 from .outlet_types import OutletTypes
 
 
-class Outlets(models.Model):
+class Outlet(models.Model):
     type = models.ForeignKey(
         OutletTypes,
         models.DO_NOTHING,
