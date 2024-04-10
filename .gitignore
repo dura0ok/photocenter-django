@@ -3,7 +3,7 @@
 .subl
 .venv
  **/__pycache__
- static/node_modules/*
-  static/node_modules
+
 # Project exclude paths
 /static/dist/
+/static/node_modules/
