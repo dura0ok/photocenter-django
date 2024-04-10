@@ -5,11 +5,11 @@ from entities.models import Branch
 
 class Kiosk(models.Model):
     outlet = models.OneToOneField(
-        'entities.models.outlet.Outlet',
+        'Outlet',
         models.DO_NOTHING,
         primary_key=True,
         db_comment='Здание где расположен',
-        help_text='Связь со зданием в котором расположен киоск'
+        help_text='Связь со зданием в котором расположен киоск',
     )
     branch_outlet = models.ForeignKey(
         Branch,
