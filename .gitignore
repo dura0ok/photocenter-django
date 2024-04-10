@@ -1,0 +1,8 @@
+.idea
+.vscode
+.subl
+.venv
+ **/__pycache__
+ static/node_modules
+# Project exclude paths
+/static/dist/
