@@ -10,7 +10,6 @@ class Firm(models.Model):
     )
 
     class Meta:
-        managed = False
         db_table = 'firms'
         db_table_comment = 'Бренды товаров'
         verbose_name = 'Бренд'

@@ -23,7 +23,6 @@ class Item(models.Model):
     )
 
     class Meta:
-        managed = False
         db_table = 'items'
         unique_together = (('firm', 'product_name'),)
         db_table_comment = 'Товары'

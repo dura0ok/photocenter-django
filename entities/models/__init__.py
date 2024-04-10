@@ -10,6 +10,10 @@ from .vendor import Vendor
 from .vendor_item import VendorItem
 from .storage import Storage
 from .storage_item import StorageItem
+from .paper_type import PaperType
+from .paper_size import PaperSize
+from .print_discount import PrintDiscount
+from .print_price import PrintPrice
 
 __all__ = [
     'Outlet',
@@ -24,4 +28,8 @@ __all__ = [
     'VendorItem',
     'Storage',
     'StorageItem',
+    'PaperType',
+    'PaperSize',
+    'PrintDiscount',
+    'PrintPrice'
 ]

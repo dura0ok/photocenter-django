@@ -19,7 +19,6 @@ class StorageItem(models.Model):
     class Meta:
         verbose_name = 'Товар на складе'
         verbose_name_plural = 'Товары на складах'
-        managed = False
         db_table = 'storage_items'
         constraints = [
             models.UniqueConstraint(

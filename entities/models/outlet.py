@@ -16,7 +16,6 @@ class Outlet(models.Model):
     )
 
     class Meta:
-        managed = True
         db_table = 'outlets'
         constraints = [
             UniqueConstraint(fields=['type', 'address'], name='unique_type_address')
