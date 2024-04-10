@@ -1,15 +1,17 @@
 from django.db import models
 
+from entities.models import PaperSize, PaperType
+
 
 class PrintPrice(models.Model):
     paper_size = models.ForeignKey(
-        'PaperSize',
+        PaperSize,
         models.DO_NOTHING,
         help_text='Выберите формат бумаги',
         db_comment='Формат бумаги'
     )
     paper_type = models.ForeignKey(
-        'PaperType',
+        PaperType,
         models.DO_NOTHING,
         help_text='Выберите тип бумаги',
         db_comment='Тип бумаги'

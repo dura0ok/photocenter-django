@@ -14,6 +14,12 @@ from .paper_type import PaperType
 from .paper_size import PaperSize
 from .print_discount import PrintDiscount
 from .print_price import PrintPrice
+from .film import Film
+from .print_order import PrintOrder
+from .order import Order
+from .frame import Frame
+from .sale_order import SaleOrder
+from .sale_film import SaleFilm
 
 __all__ = [
     'Outlet',
@@ -31,5 +37,11 @@ __all__ = [
     'PaperType',
     'PaperSize',
     'PrintDiscount',
-    'PrintPrice'
+    'PrintPrice',
+    'Film',
+    'PrintOrder',
+    'Order',
+    'Frame',
+    'SaleOrder',
+    'SaleFilm'
 ]
