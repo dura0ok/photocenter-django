@@ -8,5 +8,20 @@ from .outlet_types import OutletTypes
 from .photo_store import PhotoStore
 from .vendor import Vendor
 from .vendor_item import VendorItem
+from .storage import Storage
+from .storage_item import StorageItem
 
-__all__ = ['Outlet', 'OutletTypes', 'Client', 'Branch', 'Kiosk', 'PhotoStore', 'Firm', 'Item', 'Vendor', 'VendorItem']
+__all__ = [
+    'Outlet',
+    'OutletTypes',
+    'Client',
+    'Branch',
+    'Kiosk',
+    'PhotoStore',
+    'Firm',
+    'Item',
+    'Vendor',
+    'VendorItem',
+    'Storage',
+    'StorageItem',
+]
