@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import UniqueConstraint
 
 from entities.models import Item
 from entities.models.delivery import Delivery

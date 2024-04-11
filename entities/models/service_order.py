@@ -25,7 +25,7 @@ class ServiceOrder(models.Model):
     class Meta:
         db_table = 'service_orders'
         constraints = [
-           UniqueConstraint(fields=['service_type', 'order'], name='unique_service_order')
+            UniqueConstraint(fields=['service_type', 'order'], name='unique_service_order')
         ]
         db_table_comment = 'Заказ услуг'
         verbose_name = 'Заказ услуги'

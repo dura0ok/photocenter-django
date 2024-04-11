@@ -2,8 +2,6 @@ from django.db import models
 from django.db.models import UniqueConstraint
 
 from entities.models import Vendor, Item
-from django.db import models
-from entities.models import Vendor, Item
 
 
 class VendorItem(models.Model):
