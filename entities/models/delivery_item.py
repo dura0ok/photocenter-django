@@ -1,37 +1,36 @@
 from django.db import models
+from django.db.models import UniqueConstraint
+
 
 class DeliveryItem(models.Model):
-    delivery = models.OneToOneField(
+    delivery = models.ForeignKey(
         'Delivery',
         models.DO_NOTHING,
-        help_text='Поставка'
+        help_text='Связь с поставкой',
     )
-
     item = models.ForeignKey(
         'Item',
         models.DO_NOTHING,
-        help_text='Товар'
+        help_text='Товар в поставке'
     )
-
     purchase_price = models.DecimalField(
         max_digits=15,
         decimal_places=2,
-        help_text='Цена закупки товара'
+        db_comment='Цена закупки товара',
+        help_text='Цена по которой закупалась'
     )
-
     amount = models.IntegerField(
-        help_text='Количество поставленных единиц товара'
+        db_comment='Количество поставленных единиц товара',
+        help_text='Кол-во товара в поставке'
     )
 
     class Meta:
         db_table = 'delivery_items'
-        # constraints = [
-        #     UniqueConstraint(
-        #         fields=['delivery', 'item'],
-        #         name='delivery_items_unique')
-        # ]
-        verbose_name = 'Товар в поставке'
-        verbose_name_plural = 'Товары в поставке'
+        constraints = [
+            UniqueConstraint(
+                fields=['delivery', 'item'],
+                name='delivery_items_unique')
+        ]
         db_table_comment = 'Товары в поставке'
 
     def __str__(self):
