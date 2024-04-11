@@ -23,7 +23,7 @@ class StorageItem(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['storage', 'item'],
-                name='unique_storage_item'
+                name='storage_items_unique'
             )
         ]
         db_table_comment = 'Товары на складах зданий'

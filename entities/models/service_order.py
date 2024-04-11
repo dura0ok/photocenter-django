@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import UniqueConstraint
 
 from entities.models import Order
 
@@ -13,7 +14,6 @@ class ServiceOrder(models.Model):
     service_type = models.OneToOneField(
         'ServiceTypeOutlet',
         on_delete=models.DO_NOTHING,
-        primary_key=True,
         db_comment='Связь с типом услуги',
         help_text='Связь с типом услуги'
     )
@@ -23,9 +23,10 @@ class ServiceOrder(models.Model):
     )
 
     class Meta:
-        managed = False
         db_table = 'service_orders'
-        unique_together = (('service_type', 'order'),)
+        constraints = [
+           UniqueConstraint(fields=['service_type', 'order'], name='unique_service_order')
+        ]
         db_table_comment = 'Заказ услуг'
         verbose_name = 'Заказ услуги'
         verbose_name_plural = 'Заказы услуг'

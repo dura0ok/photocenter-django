@@ -25,10 +25,6 @@ class LoginPageView(LoginView):
 
     redirect_authenticated_user = True
 
-    def form_invalid(self, form):
-        messages.error(self.request, "Введен неправильно логин или пароль.")
-        return super().form_invalid(form)
-
     def get_success_url(self):
         return reverse_lazy('index')
 
