@@ -1,7 +1,6 @@
 from django.db import models
 
 
-
 class SaleFilm(models.Model):
     sale_order = models.ForeignKey(
         'SaleOrder',
