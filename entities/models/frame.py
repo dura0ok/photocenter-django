@@ -1,12 +1,9 @@
 from django.db import models
 
-from entities.models import PrintPrice, Film
-from entities.models.print_order import PrintOrder
-
 
 class Frame(models.Model):
     print_order = models.ForeignKey(
-        PrintOrder,
+        'PrintOrder',
         models.DO_NOTHING,
         help_text='Связь с заказом',
         db_comment='Связь с заказом'
@@ -16,7 +13,7 @@ class Frame(models.Model):
         db_comment='Количество копий'
     )
     film = models.ForeignKey(
-        Film,
+        'Film',
         models.DO_NOTHING,
         db_comment='Связь с пленкой',
         help_text='Кадр на какой пленке?'
@@ -26,7 +23,7 @@ class Frame(models.Model):
         help_text='Номер кадра'
     )
     print_price = models.ForeignKey(
-        PrintPrice,
+        'PrintPrice',
         models.DO_NOTHING,
         blank=True,
         null=True,

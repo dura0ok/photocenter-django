@@ -1,17 +1,15 @@
 from django.db import models
 
-from entities.models import Client, Outlet
-
 
 class Order(models.Model):
     client = models.ForeignKey(
-        Client,
+        'Client',
         models.DO_NOTHING,
         help_text='Клиент, который сделал заказ',
         db_comment='Клиент, который сделал заказ'
     )
     accept_outlet = models.ForeignKey(
-        Outlet,
+        'Outlet',
         models.DO_NOTHING,
         help_text='Где приняли заказ',
         db_comment='Где приняли заказ'

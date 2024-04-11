@@ -1,18 +1,14 @@
 from django.db import models
 
-from entities.models import Item
-from entities.models.delivery import Delivery
-
-
 class DeliveryItem(models.Model):
     delivery = models.OneToOneField(
-        Delivery,
+        'Delivery',
         models.DO_NOTHING,
         help_text='Поставка'
     )
 
     item = models.ForeignKey(
-        Item,
+        'Item',
         models.DO_NOTHING,
         help_text='Товар'
     )

@@ -1,6 +1,5 @@
 from django.db import models
 
-from entities.models import Order
 
 
 class FilmDevelopmentOrder(models.Model):
@@ -13,7 +12,7 @@ class FilmDevelopmentOrder(models.Model):
         db_comment='Уникальный код пленки'
     )
     order = models.ForeignKey(
-        Order,
+        'Order',
         on_delete=models.DO_NOTHING,
         blank=True,
         null=True,

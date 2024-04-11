@@ -1,11 +1,9 @@
 from django.db import models
 
-from entities.models import Vendor, Storage
-
 
 class Delivery(models.Model):
-    storage = models.ForeignKey(Storage, models.DO_NOTHING, help_text='Связь с главным складом')
-    vendor = models.ForeignKey(Vendor, models.DO_NOTHING, help_text='Связь с поставщиком')
+    storage = models.ForeignKey('Storage', models.DO_NOTHING, help_text='Связь с главным складом')
+    vendor = models.ForeignKey('Vendor', models.DO_NOTHING, help_text='Связь с поставщиком')
     delivery_date = models.DateField(help_text='Дата поставки')
 
     class Meta:

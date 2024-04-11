@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -16,7 +15,9 @@ class Migration(migrations.Migration):
             name='Firm',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(db_comment='Название Бренда', help_text='Введите название бренда.', max_length=100, unique=True)),
+                ('name',
+                 models.CharField(db_comment='Название Бренда', help_text='Введите название бренда.', max_length=100,
+                                  unique=True)),
             ],
             options={
                 'verbose_name': 'Бренд',
@@ -30,8 +31,10 @@ class Migration(migrations.Migration):
             name='Item',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('product_name', models.CharField(db_comment='Название товара', help_text='Введите название товара', max_length=100)),
-                ('price', models.DecimalField(db_comment='Цена', decimal_places=2, help_text='Введите цену товара', max_digits=15)),
+                ('product_name',
+                 models.CharField(db_comment='Название товара', help_text='Введите название товара', max_length=100)),
+                ('price', models.DecimalField(db_comment='Цена', decimal_places=2, help_text='Введите цену товара',
+                                              max_digits=15)),
             ],
             options={
                 'verbose_name': 'Товар',
@@ -59,10 +62,15 @@ class Migration(migrations.Migration):
             name='Client',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('full_name', models.CharField(db_comment='ФИО клиента', help_text='Введите ФИО клиента.', max_length=50)),
-                ('is_professional', models.BooleanField(db_comment='Профессионал или Любитель?', help_text='Отметьте, если клиент является профессионалом.')),
-                ('discount', models.IntegerField(db_comment='Персональная скидка', help_text='Введите персональную скидку клиента.')),
-                ('discount_card', models.BooleanField(blank=True, help_text='Отметьте, если у клиента есть дисконтная карта.', null=True)),
+                ('full_name',
+                 models.CharField(db_comment='ФИО клиента', help_text='Введите ФИО клиента.', max_length=50)),
+                ('is_professional', models.BooleanField(db_comment='Профессионал или Любитель?',
+                                                        help_text='Отметьте, если клиент является профессионалом.')),
+                ('discount', models.IntegerField(db_comment='Персональная скидка',
+                                                 help_text='Введите персональную скидку клиента.')),
+                ('discount_card',
+                 models.BooleanField(blank=True, help_text='Отметьте, если у клиента есть дисконтная карта.',
+                                     null=True)),
             ],
             options={
                 'verbose_name': 'Клиент(а)',
@@ -88,7 +96,9 @@ class Migration(migrations.Migration):
             name='Vendor',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(db_comment='Название компании (поставщика)', help_text='Введите название компании (поставщика)', max_length=100, unique=True)),
+                ('name', models.CharField(db_comment='Название компании (поставщика)',
+                                          help_text='Введите название компании (поставщика)', max_length=100,
+                                          unique=True)),
             ],
             options={
                 'verbose_name': 'Поставщик',
@@ -100,8 +110,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Branch',
             fields=[
-                ('outlet', models.OneToOneField(db_comment='Привязка к зданию', help_text='Связь со зданием в котором расположен филиал', on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True, serialize=False, to='entities.outlet')),
-                ('num_workers', models.IntegerField(db_comment='Количество работников', help_text='Количество работников в филиале')),
+                ('outlet', models.OneToOneField(db_comment='Привязка к зданию',
+                                                help_text='Связь со зданием в котором расположен филиал',
+                                                on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True,
+                                                serialize=False, to='entities.outlet')),
+                ('num_workers',
+                 models.IntegerField(db_comment='Количество работников', help_text='Количество работников в филиале')),
             ],
             options={
                 'verbose_name': 'Филиал',
@@ -113,7 +127,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='PhotoStore',
             fields=[
-                ('outlet', models.OneToOneField(db_comment='Привязка к зданию', help_text='Связь со зданием в котором расположен фотомагазин', on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True, serialize=False, to='entities.outlet')),
+                ('outlet', models.OneToOneField(db_comment='Привязка к зданию',
+                                                help_text='Связь со зданием в котором расположен фотомагазин',
+                                                on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True,
+                                                serialize=False, to='entities.outlet')),
                 ('num_workers', models.IntegerField(help_text='Количество работников в фотомагазине')),
             ],
             options={
@@ -126,15 +143,21 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='outlet',
             name='type',
-            field=models.ForeignKey(db_comment='Тип здания', help_text='Выберите тип здания.', on_delete=django.db.models.deletion.DO_NOTHING, to='entities.outlettypes'),
+            field=models.ForeignKey(db_comment='Тип здания', help_text='Выберите тип здания.',
+                                    on_delete=django.db.models.deletion.DO_NOTHING, to='entities.outlettypes'),
         ),
         migrations.CreateModel(
             name='VendorItem',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('current_price', models.IntegerField(blank=True, db_comment='Текущая цена по которой продает поставщик данный товар', help_text='Введите текущую цену по которой продает поставщик данный товар', null=True)),
-                ('item', models.ForeignKey(db_comment='Связь с товаром', help_text='Выберите товар', on_delete=django.db.models.deletion.DO_NOTHING, to='entities.item')),
-                ('vendor', models.ForeignKey(db_comment='Связь с поставщиком', help_text='Выберите поставщика товара', on_delete=django.db.models.deletion.DO_NOTHING, to='entities.vendor')),
+                ('current_price',
+                 models.IntegerField(blank=True, db_comment='Текущая цена по которой продает поставщик данный товар',
+                                     help_text='Введите текущую цену по которой продает поставщик данный товар',
+                                     null=True)),
+                ('item', models.ForeignKey(db_comment='Связь с товаром', help_text='Выберите товар',
+                                           on_delete=django.db.models.deletion.DO_NOTHING, to='entities.item')),
+                ('vendor', models.ForeignKey(db_comment='Связь с поставщиком', help_text='Выберите поставщика товара',
+                                             on_delete=django.db.models.deletion.DO_NOTHING, to='entities.vendor')),
             ],
             options={
                 'verbose_name': 'Товар поставщика',
@@ -146,9 +169,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Kiosk',
             fields=[
-                ('outlet', models.OneToOneField(db_comment='Здание где расположен', help_text='Связь со зданием в котором расположен киоск', on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True, serialize=False, to='entities.outlet')),
-                ('num_workers', models.IntegerField(db_comment='Количество работников', help_text='Количество работников в киоске')),
-                ('branch_outlet', models.ForeignKey(db_comment='Киоск связан с филиаом', help_text='Связь с филиалом, к которому прикреплен киоск', on_delete=django.db.models.deletion.DO_NOTHING, to='entities.branch')),
+                ('outlet', models.OneToOneField(db_comment='Здание где расположен',
+                                                help_text='Связь со зданием в котором расположен киоск',
+                                                on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True,
+                                                serialize=False, to='entities.outlet')),
+                ('num_workers',
+                 models.IntegerField(db_comment='Количество работников', help_text='Количество работников в киоске')),
+                ('branch_outlet', models.ForeignKey(db_comment='Киоск связан с филиаом',
+                                                    help_text='Связь с филиалом, к которому прикреплен киоск',
+                                                    on_delete=django.db.models.deletion.DO_NOTHING,
+                                                    to='entities.branch')),
             ],
             options={
                 'verbose_name': 'Киоск',

@@ -1,11 +1,10 @@
 from django.db import models
 
-from entities.models import SaleOrder
 
 
 class SaleFilm(models.Model):
     sale_order = models.ForeignKey(
-        SaleOrder,
+        'SaleOrder',
         models.DO_NOTHING,
         help_text='Ссылка на продажу товара в заказе',
         db_comment='Ссылка на продажу товара в заказе'
