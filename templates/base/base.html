@@ -6,6 +6,8 @@
     <link rel="shortcut icon" href="public/favicon.ico" type="image/x-icon">
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'bundle.css' %}"/>
+    {% block styles %}
+    {% endblock %}
     <title>Фотоцентр</title>
 </head>
 <body>
@@ -14,5 +16,8 @@
     {% block content %}
     {% endblock %}
 </div>
+
+{% block scripts %}
+{% endblock %}
 </body>
 </html>

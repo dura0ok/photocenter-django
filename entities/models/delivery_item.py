@@ -32,6 +32,8 @@ class DeliveryItem(models.Model):
                 name='delivery_items_unique')
         ]
         db_table_comment = 'Товары в поставке'
+        verbose_name = 'Товар в поставке'
+        verbose_name_plural = 'Товары в поставках'
 
     def __str__(self):
         return f'{self.delivery} - {self.item}'

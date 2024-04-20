@@ -7,6 +7,6 @@
 # Project exclude paths
 /static/dist/
 /static/node_modules/
-static/bundle.js
+static/queries.js
 static/bundle.css
 docker-pg/postgres-data
