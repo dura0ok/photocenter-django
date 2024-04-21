@@ -9,10 +9,6 @@ class Branch(models.Model):
         help_text='Связь со зданием в котором расположен филиал'
 
     )
-    num_workers = models.IntegerField(
-        db_comment='Количество работников',
-        help_text='Количество работников в филиале'
-    )
 
     class Meta:
         db_table = 'branches'

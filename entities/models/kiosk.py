@@ -17,10 +17,6 @@ class Kiosk(models.Model):
         db_comment='Киоск связан с филиаом',
         help_text='Связь с филиалом, к которому прикреплен киоск'
     )
-    num_workers = models.IntegerField(
-        db_comment='Количество работников',
-        help_text='Количество работников в киоске'
-    )
 
     class Meta:
         db_table = 'kiosks'

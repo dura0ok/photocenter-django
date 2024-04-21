@@ -17,7 +17,12 @@ def get_outlets():
 def first_query(request):
     if request.method == 'POST':
         outlet_type_id = request.POST.get('outlet')
-        query = "SELECT o.address, t.name FROM outlets o JOIN outlet_types t ON o.type_id = t.id WHERE o.type_id = %s"
+        query = '''
+        SELECT o.address, t.name, o.num_workers 
+        FROM outlets o 
+        JOIN outlet_types t ON o.type_id = t.id 
+        WHERE o.type_id = %s
+        '''
         return build_success_response(*execute_query(query, (outlet_type_id,)))
 
     context = get_outlets()
@@ -47,7 +52,7 @@ def second_query(request):
         query = '''
         SELECT c.full_name,
                ot.address,
-               o.accept_timestamp,
+               TO_CHAR(o.accept_timestamp, 'DD-MM-YYYY HH24:MI:SS') AS accept_timestamp,
                ot_types.name AS accept_type
         FROM public.orders o
         JOIN public.outlets ot ON o.accept_outlet_id = ot.id

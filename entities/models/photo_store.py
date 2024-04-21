@@ -12,10 +12,6 @@ class PhotoStore(models.Model):
         help_text='Связь со зданием в котором расположен фотомагазин'
     )
 
-    num_workers = models.IntegerField(
-        help_text='Количество работников в фотомагазине'
-    )
-
     class Meta:
         db_table = 'photo_stores'
         db_table_comment = 'Фотомагазины'

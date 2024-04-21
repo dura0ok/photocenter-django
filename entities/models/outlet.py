@@ -15,6 +15,11 @@ class Outlet(models.Model):
         help_text='Введите адрес здания.'
     )
 
+    num_workers = models.IntegerField(
+        db_comment='Количество работников',
+        help_text='Количество работников'
+    )
+
     class Meta:
         db_table = 'outlets'
         constraints = [
