@@ -6,6 +6,7 @@
 
 {% block params %}
     <label>
+        Выбор здания:
         <select name="outlet" id="">
             {% for outlet_type in outlet_types %}
                 <option value="{{ outlet_type.id }}">{{ outlet_type.name }}</option>

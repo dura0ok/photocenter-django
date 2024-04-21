@@ -1,0 +1,30 @@
+{% extends 'pages/queries/base.html' %}
+
+{% block query-name %}
+    Получить перечень и общее число заказов на фотоработы <br>
+    по филиалам, киоскам приема заказов, в целом по фотоцентру, <br>
+    поступивших в течение некоторого периода времени.
+{% endblock %}
+
+{% block params %}
+
+    <label>
+        Выбор здания:
+        <select name="outlet" id="">
+            {% for outlet_type in outlet_types %}
+                <option value="{{ outlet_type.id }}">{{ outlet_type.name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+
+    <label>
+        От какого дня
+        <input type="date" name="start_date">
+    </label>
+
+    <label>
+        До какого
+        <input type="date" name="end_date">
+    </label>
+
+{% endblock %}

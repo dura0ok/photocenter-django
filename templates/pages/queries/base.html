@@ -2,19 +2,19 @@
 
 {% block content %}
     <div class="query">
-    <h2 class="query-name">{% block query-name %} {% endblock %}</h2>
-            <form method="POST">
-                {% csrf_token %}
-                <div class="params">
-                    {% block params %}
-                    {% endblock %}
-                </div>
-                <button class="query-execute">Выполнить</button>
-            </form>
-
-            <div class="results">
-
+        <h2 class="query-name">{% block query-name %} {% endblock %}</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="params">
+                {% block params %}
+                {% endblock %}
             </div>
+            <button class="query-execute">Выполнить</button>
+        </form>
+
+        <div class="results">
+
+        </div>
     </div>
 {% endblock %}
 

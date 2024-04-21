@@ -1,4 +1,5 @@
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
+
 document.querySelectorAll(".query-execute").forEach((btn) => {
     btn.addEventListener("click", (e) => {
         e.preventDefault();
@@ -6,6 +7,8 @@ document.querySelectorAll(".query-execute").forEach((btn) => {
         const formData = new FormData(form)
         const currentUrl = window.location.href
         const resultWrapper = document.querySelector(".results")
+        resultWrapper.innerHTML = ""
+        console.log(resultWrapper)
 
 
         fetch(currentUrl, {
@@ -21,7 +24,7 @@ document.querySelectorAll(".query-execute").forEach((btn) => {
             const columns = jsonData.columns
             const data = jsonData.data
             console.log(columns, data)
-             new Tabulator(resultDiv, {
+            new Tabulator(resultDiv, {
                 columns: columns,
                 data: data,
                 layout: "fitDataTable"
