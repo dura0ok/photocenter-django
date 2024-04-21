@@ -22,18 +22,22 @@ document.querySelectorAll(".query-execute").forEach((btn) => {
                 showErrorToast(jsonData.message)
                 return
             }
-            const resultDiv = document.createElement('div');
-            resultDiv.classList.add('query-result');
-            resultWrapper.appendChild(resultDiv)
-            console.log(resultDiv)
-            const columns = jsonData.columns
-            const data = jsonData.data
-            console.log(columns, data)
-            new Tabulator(resultDiv, {
-                columns: columns,
-                data: data,
-                layout: "fitDataTable"
-            });
+
+
+            jsonData.results.forEach((result) => {
+                const columns = result.columns
+                const data = result.data
+                 const resultDiv = document.createElement('div');
+                resultDiv.classList.add('query-result');
+                resultWrapper.appendChild(resultDiv)
+                new Tabulator(resultDiv, {
+                    columns: columns,
+                    data: data,
+                    layout: "fitDataTable"
+                });
+
+            })
+
         }).catch((error) => {
             console.error(error);
         });
