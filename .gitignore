@@ -10,3 +10,4 @@
 static/queries.js
 static/bundle.css
 docker-pg/postgres-data
+static/dist

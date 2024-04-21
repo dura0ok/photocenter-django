@@ -1,4 +1,5 @@
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
+import {showErrorToast} from "./toasts";
 
 document.querySelectorAll(".query-execute").forEach((btn) => {
     btn.addEventListener("click", (e) => {
@@ -17,6 +18,10 @@ document.querySelectorAll(".query-execute").forEach((btn) => {
         }).then((response) => {
             return response.json();
         }).then((jsonData) => {
+            if(jsonData.error){
+                showErrorToast(jsonData.message)
+                return
+            }
             const resultDiv = document.createElement('div');
             resultDiv.classList.add('query-result');
             resultWrapper.appendChild(resultDiv)

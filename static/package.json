@@ -18,6 +18,7 @@
     "sass-loader": "^12.6.0"
   },
   "dependencies": {
-    "tabulator-tables": "^6.2.0"
+    "tabulator-tables": "^6.2.0",
+    "toastify-js": "^1.12.0"
   }
 }

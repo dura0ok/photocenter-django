@@ -1,5 +1,5 @@
 const mix = require('laravel-mix');
 
 mix
-    .sass('./scss/main.scss', 'bundle.css')
-    .js('js/queries.js', 'queries.js')
+    .sass('./scss/main.scss', 'dist/bundle.css')
+    .js(['js/queries.js', 'js/toasts.js'], 'dist/bundle.js')
