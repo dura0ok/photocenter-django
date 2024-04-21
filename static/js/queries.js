@@ -18,7 +18,7 @@ document.querySelectorAll(".query-execute").forEach((btn) => {
         }).then((response) => {
             return response.json();
         }).then((jsonData) => {
-            if(jsonData.error){
+            if (jsonData.error) {
                 showErrorToast(jsonData.message)
                 return
             }
