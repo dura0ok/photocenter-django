@@ -14,7 +14,6 @@ class SaleFilm(models.Model):
     )
 
     class Meta:
-        managed = False
         db_table = 'sale_films'
         db_table_comment = 'Продажа пленок'
         verbose_name = 'Продажа пленки'

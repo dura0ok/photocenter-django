@@ -16,7 +16,6 @@ class ServiceTypeOutlet(models.Model):
     )
 
     class Meta:
-        managed = False
         db_table = 'service_types_outlets'
         db_table_comment = 'Типы услуг'
         verbose_name = 'Вид услуги в точке обслуживания'

@@ -18,7 +18,6 @@ class PrintOrder(models.Model):
     )
 
     class Meta:
-        managed = False
         db_table = 'print_orders'
         db_table_comment = 'Заказы на печать'
         verbose_name = 'Заказ на печать'

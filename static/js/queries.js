@@ -33,7 +33,7 @@ document.querySelectorAll(".query-execute").forEach((btn) => {
                 new Tabulator(resultDiv, {
                     columns: columns,
                     data: data,
-                    layout: "fitDataTable"
+                    layout: "fitColumns"
                 });
 
             })

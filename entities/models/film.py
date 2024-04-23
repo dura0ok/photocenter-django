@@ -9,7 +9,6 @@ class Film(models.Model):
     )
 
     class Meta:
-        managed = False
         db_table = 'films'
         verbose_name = 'Фотопленка'
         verbose_name_plural = 'Фотопленки'

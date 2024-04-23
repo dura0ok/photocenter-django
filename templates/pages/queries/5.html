@@ -1,0 +1,30 @@
+{% extends 'pages/queries/base.html' %}
+
+{% block query-name %}
+     Получить количество отпечатанных фотографий в рамках простых и срочных заказов<br>
+    по указанному филиалу, киоску приема заказов, фотоцентру <br>
+    в целом за некоторый период времени.
+{% endblock %}
+
+{% block params %}
+
+    <label>
+        Выбор здания:
+        <select name="outlet" id="">
+            {% for outlet in outlets %}
+                <option value="{{ outlet.id }}">{{ outlet.type }} - {{ outlet.address }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    
+    <label>
+        От какого дня
+        <input type="date" name="start_date" required>
+    </label>
+
+    <label>
+        До какого
+        <input type="date" name="end_date" required>
+    </label>
+
+{% endblock %}

@@ -24,7 +24,6 @@ class SaleOrder(models.Model):
     )
 
     class Meta:
-        managed = False
         db_table = 'sale_orders'
         db_table_comment = 'Продажи товаров в заказе'
         verbose_name = 'Продажа товара в заказе'

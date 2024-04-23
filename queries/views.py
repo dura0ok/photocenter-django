@@ -18,6 +18,7 @@ def get_outlets():
     ).order_by('id')
     return {'outlets': outlets}
 
+
 def get_list_total_points_photo_orders_intake(request):
     """1 запрос"""
     if request.method == 'POST':
@@ -102,7 +103,7 @@ def get_special_orders_type_by_outlets(request):
 def get_special_orders_revenue(request):
     """4ый запрос"""
     if request.method == 'POST':
-        outlet_type_id = request.POST.get('outlet')
+        outlet_id = request.POST.get('outlet')
         urgency = request.POST.get('urgency')
         start = request.POST.get('start_date')
         end = request.POST.get('end_date')
@@ -189,8 +190,8 @@ def get_special_orders_revenue(request):
             '''
 
         # Execute queries and build response
-        response1 = execute_query(query1, (outlet_type_id, urgency, start, end))
-        response2 = execute_query(query2, (outlet_type_id, urgency, start, end))
+        response1 = execute_query(query1, (outlet_id, urgency, start, end))
+        response2 = execute_query(query2, (outlet_id, urgency, start, end))
         price_column = next(filter(lambda column: column["field"] == "total_price", response1.columns))
         price_column["topCalc"] = "sum"
         amount_column = next(filter(lambda column: column["field"] == "total_amount", response2.columns))
@@ -201,3 +202,31 @@ def get_special_orders_revenue(request):
 
     context = get_outlets()
     return render(request, 'pages/queries/4.html', context=context)
+
+
+def get_prints_by_outlet(request):
+    if request.method == 'POST':
+        outlet_id = request.POST.get('outlet')
+        start = request.POST.get('start_date')
+        end = request.POST.get('end_date')
+
+        query = '''
+            SELECT
+                CASE WHEN o.is_urgent THEN 'Срочный' ELSE 'Простой' END AS "Тип Заказа",
+                COALESCE(SUM(f.amount), 0) AS "Количество отпечатанных фотографий"
+            FROM
+                public.orders o
+            LEFT JOIN
+                public.print_orders po ON o.id = po.order_id
+            LEFT JOIN
+                public.frames f ON po.id = f.print_order_id
+                WHERE o.accept_outlet_id = %s AND o.accept_timestamp BETWEEN %s AND %s
+            GROUP BY
+                1;
+        '''
+
+        resp = execute_query(query, (outlet_id, start, end))
+        return build_success_response([resp])
+    """5ый запрос"""
+    context = get_outlets()
+    return render(request, 'pages/queries/5.html', context=context)

@@ -13,7 +13,6 @@ class ServiceType(models.Model):
     )
 
     class Meta:
-        managed = False
         db_table = 'service_types'
         verbose_name = 'Тип услуги'
         verbose_name_plural = 'Типы услуг'

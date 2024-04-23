@@ -24,7 +24,6 @@ class PrintPrice(models.Model):
     )
 
     class Meta:
-        managed = False
         db_table = 'print_prices'
         unique_together = (('paper_size', 'paper_type'),)
         db_table_comment = 'Расценки на печать'

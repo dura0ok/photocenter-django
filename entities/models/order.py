@@ -28,7 +28,6 @@ class Order(models.Model):
     )
 
     class Meta:
-        managed = False
         db_table = 'orders'
         db_table_comment = 'Заказы'
         verbose_name = 'Заказ'
