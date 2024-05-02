@@ -1,21 +1,30 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
 class VendorItem(models.Model):
     vendor = models.ForeignKey(
         'Vendor',
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
+        verbose_name='Поставщик',
         db_comment='Связь с поставщиком'
     )
     item = models.ForeignKey(
         'Item',
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
+        verbose_name='Предмет',
         db_comment='Связь с товаром'
     )
-    current_price = models.IntegerField(
-        blank=True,
-        null=True,
+
+    current_price = models.PositiveSmallIntegerField(
+        verbose_name='Цена',
         db_comment='Текущая цена по которой продает поставщик данный товар'
+    )
+
+    quantity = models.PositiveSmallIntegerField(
+        verbose_name='Количество',
+        db_comment='Текущая цена по которой продает поставщик данный товар',
+        validators=[MinValueValidator(1)],
     )
 
     class Meta:

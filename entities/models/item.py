@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import UniqueConstraint
 
 from entities.models.firm import Firm
 
@@ -6,13 +7,15 @@ from entities.models.firm import Firm
 class Item(models.Model):
     firm = models.ForeignKey(
         Firm,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_comment='Связь с брэндом',
+        verbose_name='Бренд',
         help_text='Выберите бренд товара'
     )
     product_name = models.CharField(
         max_length=100,
         db_comment='Название товара',
+        verbose_name='Наименование',
         help_text='Введите название товара'
     )
     price = models.DecimalField(
@@ -24,7 +27,11 @@ class Item(models.Model):
 
     class Meta:
         db_table = 'items'
-        unique_together = (('firm', 'product_name'),)
+        constraints = [
+            UniqueConstraint(
+                fields=['firm', 'product_name'],
+                name='unique_item_firm_product_name')
+        ]
         db_table_comment = 'Товары'
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'

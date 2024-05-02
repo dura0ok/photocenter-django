@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import UniqueConstraint
 
 from entities.models import PaperSize, PaperType
 
@@ -6,26 +7,32 @@ from entities.models import PaperSize, PaperType
 class PrintPrice(models.Model):
     paper_size = models.ForeignKey(
         PaperSize,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
+        verbose_name='Размер',
         help_text='Выберите формат бумаги',
         db_comment='Формат бумаги'
     )
     paper_type = models.ForeignKey(
         PaperType,
-        models.DO_NOTHING,
+        verbose_name='Тип',
+        on_delete=models.CASCADE,
         help_text='Выберите тип бумаги',
         db_comment='Тип бумаги'
     )
-    price = models.DecimalField(
-        max_digits=15,
-        decimal_places=2,
+
+    price = models.PositiveSmallIntegerField(
+        verbose_name='Цена',
         help_text='Укажите цену за (формат, печать)',
         db_comment='Цена за (формат, печать)'
     )
 
     class Meta:
         db_table = 'print_prices'
-        unique_together = (('paper_size', 'paper_type'),)
+        constraints = [
+            UniqueConstraint(
+                fields=['paper_size', 'paper_type'],
+                name='unique_print_price')
+        ]
         db_table_comment = 'Расценки на печать'
         verbose_name = 'Расценка на печать'
         verbose_name_plural = 'Расценки на печать'

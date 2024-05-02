@@ -6,15 +6,17 @@ from entities.models import Branch
 class Kiosk(models.Model):
     outlet = models.OneToOneField(
         'Outlet',
-        models.DO_NOTHING,
+        models.CASCADE,
         primary_key=True,
+        verbose_name='Адрес',
         db_comment='Здание где расположен',
         help_text='Связь со зданием в котором расположен киоск',
     )
     branch_outlet = models.ForeignKey(
         Branch,
-        models.DO_NOTHING,
-        db_comment='Киоск связан с филиаом',
+        on_delete=models.CASCADE,
+        verbose_name='Филиал',
+        db_comment='Киоск связан с филиалом',
         help_text='Связь с филиалом, к которому прикреплен киоск'
     )
 

@@ -2,9 +2,23 @@ from django.db import models
 
 
 class Delivery(models.Model):
-    storage = models.ForeignKey('Storage', models.DO_NOTHING, help_text='Связь с главным складом')
-    vendor = models.ForeignKey('Vendor', models.DO_NOTHING, help_text='Связь с поставщиком')
-    delivery_date = models.DateField(help_text='Дата поставки')
+    storage = models.ForeignKey(
+        'Storage',
+        on_delete=models.CASCADE,
+        verbose_name='Склад',
+        help_text='Связь с главным складом'
+    )
+
+    vendor = models.ForeignKey(
+        'Vendor',
+        on_delete=models.CASCADE,
+        verbose_name='Поставщик',
+        help_text='Какой поставщик осуществляет эту поставку'
+    )
+
+    delivery_date = models.DateField(
+        verbose_name='Дата поставки',
+    )
 
     class Meta:
         db_table = 'deliveries'

@@ -4,11 +4,16 @@ from django.db import models
 class SaleFilm(models.Model):
     sale_order = models.ForeignKey(
         'SaleOrder',
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
+        verbose_name='Продажа пленки(подробная и',
         help_text='Ссылка на продажу товара в заказе',
         db_comment='Ссылка на продажу товара в заказе'
     )
-    film_id = models.IntegerField(
+
+    film_id = models.ForeignKey(
+        'Film',
+        on_delete=models.CASCADE,
+        verbose_name='Плёнка',
         help_text='Ссылка на саму пленку',
         db_comment='Ссылка на саму пленку'
     )

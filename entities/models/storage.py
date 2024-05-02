@@ -12,7 +12,7 @@ class Storage(models.Model):
     )
     outlet = models.ForeignKey(
         'Outlet',
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         help_text='Связь со зданием'
     )
 

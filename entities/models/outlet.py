@@ -5,18 +5,20 @@ from django.db.models import UniqueConstraint
 class Outlet(models.Model):
     type = models.ForeignKey(
         'OutletType',
-        models.DO_NOTHING,
+        models.CASCADE,
         db_comment='Тип здания',
         help_text='Выберите тип здания.'
     )
+
     address = models.CharField(
         max_length=200,
         db_comment='Адрес',
+        verbose_name='Адрес',
         help_text='Введите адрес здания.'
     )
 
     num_workers = models.IntegerField(
-        db_comment='Количество работников',
+        verbose_name='Количество работников',
         help_text='Количество работников'
     )
 

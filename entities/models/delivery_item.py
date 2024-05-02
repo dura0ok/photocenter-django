@@ -5,12 +5,12 @@ from django.db.models import UniqueConstraint
 class DeliveryItem(models.Model):
     delivery = models.ForeignKey(
         'Delivery',
-        models.DO_NOTHING,
+        models.CASCADE,
         help_text='Связь с поставкой',
     )
     item = models.ForeignKey(
         'Item',
-        models.DO_NOTHING,
+        models.CASCADE,
         help_text='Товар в поставке'
     )
     purchase_price = models.DecimalField(

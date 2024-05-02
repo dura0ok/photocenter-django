@@ -5,6 +5,7 @@ class PaperSize(models.Model):
     name = models.CharField(
         unique=True,
         max_length=30,
+        verbose_name='Наименование',
         help_text='Название размера бумаги'
     )
 

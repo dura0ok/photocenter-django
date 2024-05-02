@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import UniqueConstraint
 
@@ -7,19 +8,23 @@ from entities.models import Order
 class ServiceOrder(models.Model):
     order = models.ForeignKey(
         Order,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
         db_comment='Связь с заказом',
         help_text='Связь с заказом'
     )
-    service_type = models.OneToOneField(
-        'ServiceTypeOutlet',
-        on_delete=models.DO_NOTHING,
+
+    service_type = models.ForeignKey(
+        'ServiceType',
+        on_delete=models.CASCADE,
         db_comment='Связь с типом услуги',
         help_text='Связь с типом услуги'
     )
+
     count = models.IntegerField(
+        verbose_name='Количество',
         db_comment='Количество таких услуг заказанных',
-        help_text='Количество таких услуг заказанных'
+        help_text='Количество таких услуг заказанных',
+        validators=[MinValueValidator(1)],
     )
 
     class Meta:

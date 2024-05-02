@@ -6,12 +6,15 @@ from entities.models import OutletType, ServiceType
 class ServiceTypeOutlet(models.Model):
     service_type = models.ForeignKey(
         ServiceType,
-        on_delete=models.DO_NOTHING,
+        verbose_name='Тип услуги',
+        on_delete=models.CASCADE,
         help_text='Тип услуги'
     )
+
     outlet_type = models.ForeignKey(
         OutletType,
-        on_delete=models.DO_NOTHING,
+        verbose_name='Тип здания',
+        on_delete=models.CASCADE,
         help_text='Тип точки обслуживания'
     )
 

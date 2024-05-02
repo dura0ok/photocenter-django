@@ -14,10 +14,12 @@ BEGIN
     ELSE
         RAISE EXCEPTION 'Selected outlet cannot provide the selected service type';
     END IF;
+
+    NEW.
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE TRIGGER check_outlet_service_type_trigger
-BEFORE INSERT ON service_orders
+BEFORE INSERT OR UPDATE ON service_orders
 FOR EACH ROW
 EXECUTE FUNCTION check_outlet_service_type();

@@ -3,6 +3,7 @@ from django.db import models
 
 class PaperType(models.Model):
     name = models.CharField(
+        verbose_name='Наименование',
         unique=True,
         max_length=30,
         help_text='Название типа бумаги'

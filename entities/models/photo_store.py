@@ -6,8 +6,9 @@ from entities.models import Outlet
 class PhotoStore(models.Model):
     outlet = models.OneToOneField(
         Outlet,
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
         primary_key=True,
+        verbose_name='Адрес',
         db_comment='Привязка к зданию',
         help_text='Связь со зданием в котором расположен фотомагазин'
     )

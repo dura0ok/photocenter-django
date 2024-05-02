@@ -3,9 +3,10 @@ from django.db import models
 
 class Film(models.Model):
     code = models.CharField(
+        verbose_name='Код',
+        help_text='Уникальный код фотопленки',
         unique=True,
         max_length=255,
-        help_text='Уникальный код фильма'
     )
 
     class Meta:

@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -6,10 +7,13 @@ class ServiceType(models.Model):
         max_length=100,
         help_text='Название услуги'
     )
+
     price = models.DecimalField(
         max_digits=15,
         decimal_places=2,
-        help_text='Цена услуги'
+        verbose_name='Цена',
+        help_text='Цена услуги',
+        validators=[MinValueValidator(0)]
     )
 
     class Meta:

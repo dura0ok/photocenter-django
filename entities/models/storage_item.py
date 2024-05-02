@@ -1,19 +1,25 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
 class StorageItem(models.Model):
-    storage = models.OneToOneField(
+    storage = models.ForeignKey(
         'Storage',
-        models.DO_NOTHING,
+        verbose_name='Склад',
+        on_delete=models.CASCADE,
         help_text='Связь со складом зданий'
     )
     item = models.ForeignKey(
         'Item',
-        models.DO_NOTHING,
+        verbose_name='Товар',
+        on_delete=models.CASCADE,
         help_text='Связь с товаром'
     )
-    quantity = models.IntegerField(
-        help_text='Количество товаров данного типа на складе'
+
+    quantity = models.PositiveSmallIntegerField(
+        verbose_name='Количество',
+        help_text='Количество товаров данного типа на складе',
+        validators=[MinValueValidator(1)]
     )
 
     class Meta:

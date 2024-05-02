@@ -4,17 +4,18 @@ from django.db import models
 class PrintOrder(models.Model):
     order = models.ForeignKey(
         'Order',
-        models.DO_NOTHING,
+        on_delete=models.CASCADE,
+        verbose_name='Заказ',
         help_text='Связь с заказом',
         db_comment='Связь с заказом'
     )
+
     discount = models.ForeignKey(
         'PrintDiscount',
-        models.DO_NOTHING,
-        blank=True,
-        null=True,
+        on_delete=models.CASCADE,
         help_text='Скидка',
-        db_comment='Скидка'
+        db_comment='Скидка',
+        null=True
     )
 
     class Meta:

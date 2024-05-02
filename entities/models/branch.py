@@ -3,11 +3,12 @@ from django.db import models
 
 class Branch(models.Model):
     outlet = models.OneToOneField(
-        'Outlet', models.DO_NOTHING,
+        'Outlet',
+        on_delete=models.CASCADE,
+        verbose_name='Адрес',
         primary_key=True,
         db_comment='Привязка к зданию',
         help_text='Связь со зданием в котором расположен филиал'
-
     )
 
     class Meta:

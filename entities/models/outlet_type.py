@@ -2,7 +2,9 @@ from django.db import models
 
 
 class OutletType(models.Model):
+
     name = models.CharField(
+        verbose_name='Наименование',
         unique=True,
         max_length=200,
         help_text='Введите название типа здания.'
