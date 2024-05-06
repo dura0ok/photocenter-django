@@ -152,9 +152,3 @@ AFTER INSERT OR UPDATE OR DELETE
 ON public.service_orders
 FOR EACH ROW
 EXECUTE FUNCTION update_price_trigger();
-
-CREATE OR REPLACE TRIGGER update_price_trigger_for_service_orders
-AFTER INSERT OR UPDATE OR DELETE
-ON public.film_development_orders
-FOR EACH ROW
-EXECUTE FUNCTION update_price_trigger();

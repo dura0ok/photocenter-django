@@ -15,7 +15,8 @@ class PrintOrder(models.Model):
         on_delete=models.CASCADE,
         help_text='Скидка',
         db_comment='Скидка',
-        null=True
+        null=True,
+        blank=True
     )
 
     class Meta:

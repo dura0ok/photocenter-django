@@ -9,6 +9,13 @@ class Film(models.Model):
         max_length=255,
     )
 
+    item = models.ForeignKey(
+        'Item',
+        on_delete=models.CASCADE,
+        verbose_name='Информация о пленке',
+        null=True
+    )
+
     class Meta:
         db_table = 'films'
         verbose_name = 'Фотопленка'

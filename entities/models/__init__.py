@@ -17,7 +17,6 @@ from .photo_store import PhotoStore
 from .print_discount import PrintDiscount
 from .print_order import PrintOrder
 from .print_price import PrintPrice
-from .sale_film import SaleFilm
 from .sale_order import SaleOrder
 from .service_order import ServiceOrder
 from .service_type import ServiceType
@@ -51,7 +50,6 @@ __all__ = [
     'Order',
     'Frame',
     'SaleOrder',
-    'SaleFilm',
     'DeliveryItem',
     'Delivery',
     'FilmDevelopmentOrder',

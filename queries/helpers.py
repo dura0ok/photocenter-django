@@ -16,10 +16,17 @@ def execute_query(query, params=None) -> QueryResult:
         return QueryResult(columns=columns, data=data_with_field_keys)
 
 
-def build_success_response(responses: list[QueryResult]) -> JsonResponse:
+def build_success_response(responses: list[QueryResult], *args: list[str]) -> JsonResponse:
+    converted_list = [
+        [{"title": title, "field": field} for title, field in zip(sublist, sublist)]
+        for sublist in list(args)
+    ]
     results = []
-    for response in responses:
-        results.append({'columns': response.columns, 'data': response.data})
+
+    for index, response in enumerate(responses):
+        cur_columns = converted_list[index]
+        results.append({'columns': cur_columns if cur_columns is not None else response.columns, 'data': response.data})
+
     return JsonResponse({'results': results}, safe=False,
                         json_dumps_params={'ensure_ascii': False})
 

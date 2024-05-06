@@ -35,4 +35,4 @@ class StorageItem(models.Model):
         db_table_comment = 'Товары на складах зданий'
 
     def __str__(self):
-        return f'{self.item} - {self.quantity}'
+        return f'{self.storage} {self.item} - {self.quantity}'
