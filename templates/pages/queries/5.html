@@ -15,8 +15,16 @@
                 <option value="{{ outlet.id }}">{{ outlet.type }} - {{ outlet.address }}</option>
             {% endfor %}
         </select>
+
     </label>
-    
+        <label>
+        Срочность:
+        <select name="urgency">
+            <option value=0>Не срочный</option>
+            <option value=1>Срочный</option>
+        </select>
+    </label>
+
     <label>
         От какого дня
         <input type="date" name="start_date" required>

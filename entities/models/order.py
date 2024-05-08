@@ -45,4 +45,4 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
 
     def __str__(self):
-        return f'{self.client} - {self.accept_timestamp}'
+        return f'{self.client} - {self.accept_outlet.address} -{self.accept_timestamp}'

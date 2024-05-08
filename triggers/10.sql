@@ -25,6 +25,21 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION calculate_film_development_orders_price(order_id BIGINT)
+RETURNS BIGINT AS $$
+DECLARE
+    total_price INTEGER := 0;
+BEGIN
+
+    SELECT COALESCE(SUM(st.price * so.count), 0) INTO total_price
+    FROM service_orders so
+    JOIN public.service_types st on so.service_type_id = st.id
+    WHERE st.name = 'Проявка плёнки' AND so.order_id = calculate_film_development_orders_price.order_id;
+    RAISE NOTICE 'LALA % % %', total_price, calculate_film_development_orders_price.order_id, total_price;
+    RETURN total_price;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION calculate_service_orders_price(order_id BIGINT)
 RETURNS BIGINT AS $$
 DECLARE
@@ -53,21 +68,6 @@ BEGIN
     JOIN items ON sale_orders.item_id = items.id
     WHERE sale_orders.order_id = calculate_sale_orders_price.order_id;
 
-    RETURN total_price;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION calculate_film_development_orders_price(order_id BIGINT)
-RETURNS BIGINT AS $$
-DECLARE
-    total_price INTEGER := 0;
-BEGIN
-
-    SELECT COALESCE(SUM(st.price * so.count), 0) INTO total_price
-    FROM service_orders so
-    JOIN public.service_types st on so.service_type_id = st.id
-    WHERE st.name = 'Проявка плёнки' AND so.order_id = calculate_film_development_orders_price.order_id;
-    RAISE NOTICE 'LALA % % %', total_price, calculate_film_development_orders_price.order_id, total_price;
     RETURN total_price;
 END;
 $$ LANGUAGE plpgsql;
