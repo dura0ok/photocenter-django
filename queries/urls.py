@@ -1,9 +1,10 @@
 from django.urls import path
+
 from .views import *
 
 unused()
 
-n = 10
+n = 12
 urlpatterns = []
 
 for i in range(1, n + 1):

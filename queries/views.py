@@ -116,7 +116,7 @@ class Query3Handler(View):
                     JOIN 
                         outlets ot ON o.accept_outlet_id = ot.id
                     WHERE 
-                        ACCEPT_OUTLET_ID = %s 
+                        accept_outlet_id = %s 
                         AND is_urgent = %s
                         AND accept_timestamp BETWEEN %s AND %s;
                 '''
@@ -378,8 +378,10 @@ class Query9Handler(View):
         '''
 
         resp = execute_query(query, args, 'Адрес', 'ФИО', 'Дата', 'Цена проданных фототоваров в заказе')
-        resp.add_value_to_column_by_field(field_name="Цена проданных фототоваров в заказе", key="bottomCalc", data="sum")
+        resp.add_value_to_column_by_field(field_name="Цена проданных фототоваров в заказе", key="bottomCalc",
+                                          data="sum")
         return build_success_response([resp])
+
 
 class Query10Handler(View):
     @staticmethod
@@ -425,3 +427,72 @@ class Query10Handler(View):
 
         resp = execute_query(query, outlet_id, 'Фирма', 'Продукт', 'Сколько продано', 'Место')
         return build_success_response([resp])
+
+
+class Query11Handler(View):
+    @staticmethod
+    def get(request):
+        context = get_outlets()
+        context["all_outlets"] = True
+        return render(request, 'pages/queries/11.html', context=context)
+
+    @staticmethod
+    def post(request):
+        outlet_id = request.POST.get("outlet")
+        start_date = request.POST.get("start_date")
+        end_date = request.POST.get("end_date")
+
+        try:
+            start, end = validate_date_range(start_date, end_date)
+        except ValueError as e:
+            return build_error_response(str(e))
+
+        args = [start, end]
+
+        if outlet_id:
+            args.append(outlet_id)
+
+        query = f'''
+            SELECT ot.address, c.full_name, 
+                TO_CHAR(o.accept_timestamp, 'DD-MM-YYYY HH24:MI:SS'), calculate_sale_orders_price(o.id) 
+                FROM orders o
+                JOIN public.clients c on c.id = o.client_id
+                JOIN outlets ot ON o.accept_outlet_id = ot.id
+                WHERE accept_timestamp BETWEEN %s AND %s
+                {'AND o.accept_outlet_id = %s' if outlet_id else ''}
+        '''
+
+        resp = execute_query(query, args, 'Адрес', 'ФИО', 'Дата', 'Цена проданных фототоваров в заказе')
+        resp.add_value_to_column_by_field(field_name="Цена проданных фототоваров в заказе", key="bottomCalc",
+                                          data="sum")
+        return build_success_response([resp])
+
+
+class Query12Handler(View):
+    @staticmethod
+    def get(request):
+        context = get_outlet_types()
+        context["all_types"] = True
+        return render(request, 'pages/queries/12.html', context=context)
+
+    @staticmethod
+    def post(request):
+        outlet_type_id = request.POST.get('outlet_type')
+        print(outlet_type_id)
+        if not outlet_type_id:
+            query = '''
+                SELECT
+                  SUM(num_workers) AS total_workers
+                FROM
+                  outlets;
+            '''
+            return build_success_response([execute_query(query, None, 'Количество')])
+
+        query = '''
+                  SELECT o.address, o.num_workers 
+                  FROM outlets o 
+                  JOIN outlet_types t ON o.type_id = t.id 
+                  WHERE o.type_id = %s
+                  '''
+
+        return build_success_response([execute_query(query, (outlet_type_id,), 'Адрес', 'Количество работников')])
