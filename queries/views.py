@@ -1,9 +1,13 @@
-from django.db.models import Q, QuerySet
+from django.db.models import Q
 from django.shortcuts import render
 from django.views import View
 
 from entities.models import OutletType, Outlet, Item
 from .helpers import *
+
+
+def unused():
+    pass
 
 
 def get_outlet_types():
