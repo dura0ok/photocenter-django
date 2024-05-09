@@ -2,7 +2,7 @@ from django.db.models import Q, QuerySet
 from django.shortcuts import render
 from django.views import View
 
-from entities.models import OutletType, Outlet
+from entities.models import OutletType, Outlet, Item
 from .helpers import *
 
 
@@ -149,7 +149,7 @@ class Query4Handler(View):
         '''
         resp = execute_query(query, (outlet_id, urgency, start, end), 'Адрес', 'Фио Клиента', 'Время',
                              'Стоимость услуг')
-        resp.add_value_to_column_by_field(field_name="Стоимость услуг", key="topCalc", data="sum")
+        resp.add_value_to_column_by_field(field_name="Стоимость услуг", key="bottomCalc", data="sum")
         return build_success_response([resp])
 
 
@@ -206,66 +206,135 @@ class Query5Handler(View):
             'Адрес', 'ФИО', 'Дата', 'Количество'
         )
 
-        resp.add_value_to_column_by_field(field_name="Количество", key="topCalc", data="sum")
+        resp.add_value_to_column_by_field(field_name="Количество", key="bottomCalc", data="sum")
         return build_success_response([
             resp
         ])
 
+
 class Query6Handler(View):
-        @staticmethod
-        def get(request):
-            context = get_outlets()
-            context["all_outlets"] = True
-            return render(request, 'pages/queries/6.html', context=context)
+    @staticmethod
+    def get(request):
+        context = get_outlets()
+        context["all_outlets"] = True
+        return render(request, 'pages/queries/6.html', context=context)
 
-        @staticmethod
-        def post(request):
-            outlet_id = request.POST.get('outlet')
-            urgency = request.POST.get('urgency')
-            start = request.POST.get('start_date')
-            end = request.POST.get('end_date')
+    @staticmethod
+    def post(request):
+        outlet_id = request.POST.get('outlet')
+        urgency = request.POST.get('urgency')
+        start = request.POST.get('start_date')
+        end = request.POST.get('end_date')
 
-            try:
-                start, end = validate_date_range(start, end)
-            except ValueError as e:
-                return build_error_response(str(e))
+        try:
+            start, end = validate_date_range(start, end)
+        except ValueError as e:
+            return build_error_response(str(e))
 
-            query = f'''
-                            SELECT
-                            ot.address,
-                            c.full_name,
-                            TO_CHAR(o.accept_timestamp, 'DD-MM-YYYY HH24:MI:SS'),
-                            po.code
-                        FROM
-                            film_development_orders po
-                        JOIN 
-                            service_orders so on po.service_order_id = so.id
-                        JOIN 
-                            orders o ON so.order_id = o.id
-                        JOIN 
-                            outlets ot ON o.accept_outlet_id = ot.id
-                        JOIN
-                            clients c ON c.id = o.client_id
-                    
-                        WHERE
-                            o.is_urgent = %s
-                            AND o.accept_timestamp BETWEEN %s AND %s 
-                            {'AND o.accept_outlet_id = %s' if outlet_id else ''}
-                            GROUP BY ot.address, c.full_name, o.accept_timestamp, po.code;
+        query = f'''
+                        SELECT COUNT(*) FROM film_development_orders;
                         '''
 
-            args = [urgency, start, end]
+        args = [urgency, start, end]
 
-            if outlet_id:
-                args.append(outlet_id)
+        if outlet_id:
+            args.append(outlet_id)
 
-            resp = execute_query(
-                query,
-                args,
-                'Адрес', 'ФИО', 'Дата', 'Код'
-            )
+        resp = execute_query(
+            query,
+            args,
+            'Количество'
+        )
 
-            resp.add_value_to_column_by_field(field_name="Код", key="topCalc", data="count")
-            return build_success_response([
-                resp
-            ])
+        return build_success_response([
+            resp
+        ])
+
+
+class Query7Handler(View):
+    @staticmethod
+    def get(request):
+        items = Item.objects.all()
+        context = {
+            'items': items
+        }
+        return render(request, 'pages/queries/7.html', context=context)
+
+    @staticmethod
+    def post(request):
+        item_id = request.POST.get("item")
+        start = request.POST.get('start_date')
+        end = request.POST.get('end_date')
+        volume = request.POST.get('volume')
+
+        if not volume:
+            volume = 0
+
+        try:
+            start, end = validate_date_range(start, end)
+        except ValueError as e:
+            return build_error_response(str(e))
+
+        args = [start, end, volume]
+
+        if item_id:
+            args.append(item_id)
+
+        query = f'''
+                    SELECT
+                    v.name,
+            SUM(di.amount) AS delivery_count
+        FROM
+            vendors v
+        JOIN vendor_items vi ON v.id = vi.vendor_id
+        JOIN delivery_items di ON vi.item_id = di.item_id
+        JOIN deliveries d ON di.delivery_id = d.id
+        WHERE
+            d.delivery_date BETWEEN %s AND %s
+            AND di.amount >= %s
+            {'AND vi.item_id = %s' if item_id else ''}
+        GROUP BY
+            v.name;
+        '''
+
+        resp = execute_query(query, args, 'Имя поставщика', 'Количество поставок')
+        resp.add_value_to_column_by_field(field_name="Количество поставок", key="bottomCalc", data="sum")
+        return build_success_response([resp])
+
+
+class Query8Handler(View):
+    @staticmethod
+    def get(request):
+        context = get_outlets()
+        context["all_outlets"] = True
+        return render(request, 'pages/queries/8.html', context=context)
+
+    @staticmethod
+    def post(request):
+        outlet_id = request.POST.get("outlet")
+        buy_min = request.POST.get('volume')
+        discount_min = request.POST.get('discount')
+
+        args = [discount_min, buy_min]
+
+        if outlet_id:
+            args.append(outlet_id)
+
+        resp1 = execute_query(
+            f'''
+                            SELECT DISTINCT  c.full_name, 
+                               CASE 
+                                   WHEN is_professional THEN 'Да' 
+                                   WHEN NOT is_professional THEN 'Нет' 
+                               END AS is_professional, 
+                               discount,
+                               SUM(COALESCE(o.total_amount_price, 0))
+                        FROM clients c
+                        LEFT JOIN orders o on c.id = o.client_id
+                        WHERE c.discount >= %s
+                        GROUP BY c.id, c.full_name, c.is_professional, c.discount, total_amount_price, accept_outlet_id
+                        HAVING SUM(COALESCE(o.total_amount_price, 0)) >= %s
+                        {'AND o.accept_outlet_id = %s' if outlet_id else ''}
+                        ''',
+            args, 'Имя', 'Профессионал', 'Скидка', 'Обьем покупок')
+        return build_success_response([resp1])
