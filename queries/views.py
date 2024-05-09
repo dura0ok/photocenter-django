@@ -342,3 +342,86 @@ class Query8Handler(View):
                         ''',
             args, 'Имя', 'Профессионал', 'Скидка', 'Обьем покупок')
         return build_success_response([resp1])
+
+
+class Query9Handler(View):
+    @staticmethod
+    def get(request):
+        context = get_outlets()
+        context["all_outlets"] = True
+        return render(request, 'pages/queries/9.html', context=context)
+
+    @staticmethod
+    def post(request):
+        outlet_id = request.POST.get("outlet")
+        start_date = request.POST.get("start_date")
+        end_date = request.POST.get("end_date")
+
+        try:
+            start, end = validate_date_range(start_date, end_date)
+        except ValueError as e:
+            return build_error_response(str(e))
+
+        args = [start, end]
+
+        if outlet_id:
+            args.append(outlet_id)
+
+        query = f'''
+            SELECT ot.address, c.full_name, 
+                TO_CHAR(o.accept_timestamp, 'DD-MM-YYYY HH24:MI:SS'), calculate_sale_orders_price(o.id) 
+                FROM orders o
+                JOIN public.clients c on c.id = o.client_id
+                JOIN outlets ot ON o.accept_outlet_id = ot.id
+                WHERE accept_timestamp BETWEEN %s AND %s
+                {'AND o.accept_outlet_id = %s' if outlet_id else ''}
+        '''
+
+        resp = execute_query(query, args, 'Адрес', 'ФИО', 'Дата', 'Цена проданных фототоваров в заказе')
+        resp.add_value_to_column_by_field(field_name="Цена проданных фототоваров в заказе", key="bottomCalc", data="sum")
+        return build_success_response([resp])
+
+class Query10Handler(View):
+    @staticmethod
+    def get(request):
+        context = get_outlets()
+        context["all_outlets"] = True
+        return render(request, 'pages/queries/10.html', context=context)
+
+    @staticmethod
+    def post(request):
+        outlet_id = request.POST.get("outlet")
+
+        query = f'''
+            WITH SalesData AS (
+                SELECT
+                    f.name AS firm_name,
+                    i.product_name AS product_name,
+                    SUM(so.amount) AS count_saled,
+                    ROW_NUMBER() OVER (ORDER BY SUM(so.amount) DESC) AS sales_rank
+                FROM
+                    firms f
+                JOIN
+                    items i ON i.firm_id = f.id
+                JOIN
+                    sale_orders so ON so.item_id = i.id
+                JOIN
+                    orders o ON so.order_id = o.id
+                {'WHERE o.accept_outlet_id = %s' if outlet_id else ''}
+                GROUP BY
+                    f.name, i.product_name
+            )
+            
+            SELECT
+                firm_name,
+                product_name,
+                count_saled,
+                sales_rank
+            FROM
+                SalesData
+            ORDER BY
+                sales_rank;
+        '''
+
+        resp = execute_query(query, outlet_id, 'Фирма', 'Продукт', 'Сколько продано', 'Место')
+        return build_success_response([resp])

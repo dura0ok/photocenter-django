@@ -3,7 +3,7 @@ from .views import *
 
 unused()
 
-n = 8
+n = 10
 urlpatterns = []
 
 for i in range(1, n + 1):
