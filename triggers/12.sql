@@ -1,4 +1,5 @@
-CREATE OR REPLACE FUNCTION check_film_item_type() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION check_film_item_type() RETURNS TRIGGER AS
+$$
 DECLARE
     item_name TEXT;
 BEGIN
@@ -11,6 +12,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE TRIGGER check_correct_film_item_type
-BEFORE INSERT OR UPDATE ON films
-FOR EACH ROW
+    BEFORE INSERT OR UPDATE
+    ON films
+    FOR EACH ROW
 EXECUTE FUNCTION check_film_item_type();

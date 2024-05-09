@@ -1,6 +1,5 @@
 import json
 from dataclasses import dataclass
-from typing import TypedDict
 
 dictType = dict[str, any]
 
@@ -20,4 +19,3 @@ class QueryResult:
         for column in self.columns:
             if column["field"] == field_name:
                 column[key] = data
-

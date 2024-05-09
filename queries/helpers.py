@@ -1,6 +1,6 @@
 import datetime
 from datetime import date
-from typing import Optional, Tuple
+from typing import Optional
 
 from django.db import connection
 from django.http import JsonResponse

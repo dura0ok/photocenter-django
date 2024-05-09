@@ -1,38 +1,11 @@
 {% extends 'pages/queries/base.html' %}
 
 {% block query-name %}
-   Получить сумму выручки с заказов (отдельно простых и срочных) на отдельные виды фоторабот <br>
+    Получить сумму выручки с заказов (отдельно простых и срочных) на отдельные виды фоторабот <br>
     по указанному филиалу, киоску приема заказов,<br>
     поступивших в течение некоторого периода времени.
 {% endblock %}
 
 {% block params %}
-
-    <label>
-        Выбор здания:
-        <select name="outlet" id="">
-            {% for outlet in outlets %}
-                <option value="{{ outlet.id }}">{{ outlet.type }} - {{ outlet.address }}</option>
-            {% endfor %}
-        </select>
-    </label>
-
-    <label>
-        Срочность:
-        <select name="urgency">
-            <option value=0>Не срочный</option>
-            <option value=1>Срочный</option>
-        </select>
-    </label>
-
-    <label>
-        От какого дня
-        <input type="date" name="start_date" required>
-    </label>
-
-    <label>
-        До какого
-        <input type="date" name="end_date" required>
-    </label>
-
+    {% include 'pages/queries/base_choose.html' %}
 {% endblock %}

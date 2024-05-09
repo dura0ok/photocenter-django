@@ -2,8 +2,7 @@
 -- виды фоторабот по указанному филиалу, киоску приема заказов, поступивших в течение
 -- некоторого периода времени
 
-CREATE OR REPLACE
-TEMPORARY VIEW services_list AS
+CREATE OR REPLACE TEMPORARY VIEW services_list AS
 SELECT st.name,
        o.is_urgent,
        o.accept_timestamp,
@@ -11,10 +10,10 @@ SELECT st.name,
        ot.address,
        o.accept_outlet_id
 FROM service_orders so
-JOIN orders o ON so.order_id = o.id
-JOIN service_types st ON so.service_type_id = st.id
-JOIN public.clients c ON o.client_id = c.id
-JOIN outlets ot ON o.accept_outlet_id = ot.id;
+         JOIN orders o ON so.order_id = o.id
+         JOIN service_types st ON so.service_type_id = st.id
+         JOIN public.clients c ON o.client_id = c.id
+         JOIN outlets ot ON o.accept_outlet_id = ot.id;
 
 
 SELECT *

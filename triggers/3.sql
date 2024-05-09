@@ -1,14 +1,17 @@
 -- Проверить при вставке нового товара в storage_items, что емкость склада не превышена
 CREATE OR REPLACE FUNCTION check_storage_capacity()
-RETURNS TRIGGER AS $$
+    RETURNS TRIGGER AS
+$$
 DECLARE
     total_quantity INTEGER;
     capacity_limit integer;
 BEGIN
 
-    SELECT COALESCE(SUM(quantity), 0) INTO total_quantity
+    SELECT COALESCE(SUM(quantity), 0)
+    INTO total_quantity
     FROM storage_items
-    WHERE storage_id = NEW.storage_id AND item_id != NEW.item_id;
+    WHERE storage_id = NEW.storage_id
+      AND item_id != NEW.item_id;
 
     SELECT capacity INTO capacity_limit FROM storage WHERE id = NEW.storage_id;
     IF capacity_limit IS NULL THEN
@@ -27,6 +30,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE TRIGGER check_storage_capacity_trigger
-BEFORE INSERT OR UPDATE ON storage_items
-FOR EACH ROW
+    BEFORE INSERT OR UPDATE
+    ON storage_items
+    FOR EACH ROW
 EXECUTE FUNCTION check_storage_capacity();

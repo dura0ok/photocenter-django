@@ -27,7 +27,7 @@ document.querySelectorAll(".query-execute").forEach((btn) => {
             jsonData.results.forEach((result) => {
                 const columns = result.columns
                 const data = result.data
-                 const resultDiv = document.createElement('div');
+                const resultDiv = document.createElement('div');
                 resultDiv.classList.add('query-result');
                 resultWrapper.appendChild(resultDiv)
                 new Tabulator(resultDiv, {

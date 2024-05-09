@@ -1,4 +1,5 @@
-CREATE OR REPLACE FUNCTION check_film_development_order() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION check_film_development_order() RETURNS TRIGGER AS
+$$
 DECLARE
     type_id BIGINT;
 BEGIN
@@ -11,6 +12,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE TRIGGER check_correct_service_type_selected_film_order
-BEFORE INSERT OR UPDATE ON film_development_orders
-FOR EACH ROW
+    BEFORE INSERT OR UPDATE
+    ON film_development_orders
+    FOR EACH ROW
 EXECUTE FUNCTION check_film_development_order();

@@ -9,7 +9,7 @@
 {% block params %}
 
     <label>
-        Выбор здания:
+        Выбор Типа здания:
         <select name="outlet" id="">
             {% for outlet_type in outlet_types %}
                 <option value="{{ outlet_type.id }}">{{ outlet_type.name }}</option>
@@ -17,14 +17,6 @@
         </select>
     </label>
 
-    <label>
-        От какого дня
-        <input type="date" name="start_date" required>
-    </label>
-
-    <label>
-        До какого
-        <input type="date" name="end_date" required>
-    </label>
+    {% include 'pages/queries/dates_range.html' %}
 
 {% endblock %}

@@ -8,4 +8,5 @@ urlpatterns = [
     path('3', Query3Handler.as_view()),
     path('4', Query4Handler.as_view()),
     path('5', Query5Handler.as_view()),
+    path('6', Query6Handler.as_view()),
 ]

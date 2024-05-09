@@ -1,8 +1,8 @@
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from django.shortcuts import render
-from django.views.decorators.http import require_http_methods
-from entities.models import OutletType, Outlet
 from django.views import View
+
+from entities.models import OutletType, Outlet
 from .helpers import *
 
 
@@ -157,6 +157,7 @@ class Query5Handler(View):
     @staticmethod
     def get(request):
         context = get_outlets()
+        context["all_outlets"] = True
         return render(request, 'pages/queries/5.html', context=context)
 
     @staticmethod
@@ -165,6 +166,11 @@ class Query5Handler(View):
         urgency = request.POST.get('urgency')
         start = request.POST.get('start_date')
         end = request.POST.get('end_date')
+
+        try:
+            start, end = validate_date_range(start, end)
+        except ValueError as e:
+            return build_error_response(str(e))
 
         query = f'''
                     SELECT
@@ -185,13 +191,18 @@ class Query5Handler(View):
                 WHERE
                     o.is_urgent = %s
                     AND o.accept_timestamp BETWEEN %s AND %s 
-                    {"AND o.accept_outlet_id = %s" if outlet_id is not None else ""}
+                    {'AND o.accept_outlet_id = %s' if outlet_id else ''}
                     GROUP BY ot.address, c.full_name, o.accept_timestamp;
                 '''
 
+        args = [urgency, start, end]
+
+        if outlet_id:
+            args.append(outlet_id)
+
         resp = execute_query(
             query,
-            (urgency, start, end, outlet_id),
+            args,
             'Адрес', 'ФИО', 'Дата', 'Количество'
         )
 
@@ -199,3 +210,62 @@ class Query5Handler(View):
         return build_success_response([
             resp
         ])
+
+class Query6Handler(View):
+        @staticmethod
+        def get(request):
+            context = get_outlets()
+            context["all_outlets"] = True
+            return render(request, 'pages/queries/6.html', context=context)
+
+        @staticmethod
+        def post(request):
+            outlet_id = request.POST.get('outlet')
+            urgency = request.POST.get('urgency')
+            start = request.POST.get('start_date')
+            end = request.POST.get('end_date')
+
+            try:
+                start, end = validate_date_range(start, end)
+            except ValueError as e:
+                return build_error_response(str(e))
+
+            query = f'''
+                            SELECT
+                            ot.address,
+                            c.full_name,
+                            TO_CHAR(o.accept_timestamp, 'DD-MM-YYYY HH24:MI:SS'),
+                            po.code
+                        FROM
+                            film_development_orders po
+                        JOIN 
+                            service_orders so on po.service_order_id = so.id
+                        JOIN 
+                            orders o ON so.order_id = o.id
+                        JOIN 
+                            outlets ot ON o.accept_outlet_id = ot.id
+                        JOIN
+                            clients c ON c.id = o.client_id
+                    
+                        WHERE
+                            o.is_urgent = %s
+                            AND o.accept_timestamp BETWEEN %s AND %s 
+                            {'AND o.accept_outlet_id = %s' if outlet_id else ''}
+                            GROUP BY ot.address, c.full_name, o.accept_timestamp, po.code;
+                        '''
+
+            args = [urgency, start, end]
+
+            if outlet_id:
+                args.append(outlet_id)
+
+            resp = execute_query(
+                query,
+                args,
+                'Адрес', 'ФИО', 'Дата', 'Код'
+            )
+
+            resp.add_value_to_column_by_field(field_name="Код", key="topCalc", data="count")
+            return build_success_response([
+                resp
+            ])

@@ -2,7 +2,6 @@ from django.db import models
 
 
 class OutletType(models.Model):
-
     name = models.CharField(
         verbose_name='Наименование',
         unique=True,
