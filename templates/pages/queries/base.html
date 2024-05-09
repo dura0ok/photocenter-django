@@ -5,6 +5,7 @@
         <h2 class="query-name">{% block query-name %} {% endblock %}</h2>
         <form method="POST">
             {% csrf_token %}
+
             <div class="params">
                 {% block params %}
                 {% endblock %}

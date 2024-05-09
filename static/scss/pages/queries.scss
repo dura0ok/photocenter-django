@@ -1,4 +1,11 @@
 .query {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  gap: 40px;
+
   .query-name {
     font-size: 24px;
     margin-bottom: 20px;
@@ -7,17 +14,17 @@
   }
 
   .params {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-    text-align: center;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    width: auto;
+    gap: 20px;
+
 
     label {
-      display: flex;
-      align-items: center;
-      margin-bottom: 5px;
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-column: span 2;
+      gap: 10px;
     }
 
     label input[type="text"] {

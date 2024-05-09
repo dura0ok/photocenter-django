@@ -19,6 +19,10 @@ def get_queries_list(request):
     return render(request, 'pages/queries.html', context=context)
 
 
+def create_order(request):
+    return render(request, 'pages/create_order.html')
+
+
 class CustomAuthenticationForm(AuthenticationForm):
     error_messages = {
         'invalid_login': _(
