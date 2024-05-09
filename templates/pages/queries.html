@@ -1,0 +1,12 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <div class="queries-list-wrapper">
+        <ul class="queries-list">
+            {% for i in queries_size %}
+                <li><a href="queries/{{ i }}">Запрос {{ i }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}

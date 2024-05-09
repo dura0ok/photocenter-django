@@ -4,9 +4,19 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
+from queries.urls import QUERIES_NUMBER
+
 
 def index(request):
     return render(request, 'pages/index.html')
+
+
+def get_queries_list(request):
+    n = QUERIES_NUMBER
+    context = {
+        'queries_size': range(1, n + 1),
+    }
+    return render(request, 'pages/queries.html', context=context)
 
 
 class CustomAuthenticationForm(AuthenticationForm):
