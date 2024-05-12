@@ -3,7 +3,9 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
+from django.views import View
 
+from entities.models import *
 from queries.urls import QUERIES_NUMBER
 
 
@@ -19,8 +21,17 @@ def get_queries_list(request):
     return render(request, 'pages/queries.html', context=context)
 
 
-def create_order(request):
-    return render(request, 'pages/create_order.html')
+class CreateOrder(View):
+    @staticmethod
+    def get(request):
+        context = {
+            'clients': Client.objects.all(),
+        }
+        return render(request, 'pages/create_order.html', context=context)
+
+    @staticmethod
+    def post(request):
+        pass
 
 
 class CustomAuthenticationForm(AuthenticationForm):
