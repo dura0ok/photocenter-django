@@ -9,7 +9,8 @@ class CustomUser(AbstractUser):
         on_delete=models.CASCADE,
         related_name='users',
         null=True,
-        blank=True
+        blank=True,
+        verbose_name='Здание'
     )
 
     class Meta:
