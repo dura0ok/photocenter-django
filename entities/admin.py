@@ -1,6 +1,8 @@
 from django.contrib import admin
 
+from entities.custom_user import CustomUser
 from entities.models import *
+
 
 admin.site.register(Client)
 admin.site.register(OutletType)

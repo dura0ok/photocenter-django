@@ -3,12 +3,12 @@ const servicesOrderWrapper = document.querySelector(".services-info")
 const servicesWrapper = servicesOrderWrapper.querySelector('.services')
 const serviceCreateBtn = servicesOrderWrapper.querySelector(".service-create-btn")
 const btnTag = "button"
-const containerWithSelectorClass = "option-selector"
-
+const containerWithSelectorClass = "options-selector"
+const codesContainerClass = "codes-container"
 
 const createServiceSelectAndInput = (data, key, selectCallback, inputCallback) => {
     const container = document.createElement("div");
-    container.classList.add("option-selector");
+    container.classList.add(`.${containerWithSelectorClass}`);
 
     const select = document.createElement('select');
     data.forEach(item => {
@@ -26,6 +26,7 @@ const createServiceSelectAndInput = (data, key, selectCallback, inputCallback) =
     countInput.addEventListener('change', (e) => inputCallback(e.target))
     countInput.type = 'number';
     countInput.placeholder = 'Количество';
+    countInput.value = "0"
 
     container.appendChild(select)
     container.appendChild(countInput)
@@ -34,14 +35,37 @@ const createServiceSelectAndInput = (data, key, selectCallback, inputCallback) =
 
 
 const onServiceSelectChange = (select) => {
-    const selectedIndex = select.selectedIndex
-    const selectedOption = select.options[selectedIndex]
-    console.log(selectedOption)
-    console.log(selectedOption.value)
+    const serviceWrapper = select.closest('div')
+    onServiceInputChange(serviceWrapper.querySelector('input'))
 }
 
 const onServiceInputChange = (inputTarget) => {
-    console.log(inputTarget)
+    const quantity = inputTarget.value
+    const serviceWrapper = inputTarget.closest('div')
+    const select = serviceWrapper.querySelector('select');
+    const selectedEl = select.options[select.selectedIndex]
+    let codesContainer = serviceWrapper.querySelector(`${codesContainerClass}`)
+
+    if(selectedEl.value !== "Проявка плёнки"){
+        if(codesContainer){
+            codesContainer.remove()
+        }
+        return
+    }
+    debugger;
+    if(!codesContainer){
+        const newCodesContainer = document.createElement('div')
+        newCodesContainer.classList.add(`${codesContainerClass}`)
+        serviceWrapper.appendChild(newCodesContainer)
+        codesContainer = newCodesContainer
+    }
+    console.log(codesContainer, codesContainer.querySelectorAll('input'))
+    codesContainer.querySelectorAll('input').forEach(el => el.remove())
+
+    for(let i = 0; i < quantity; i++) {
+        const el = document.createElement("input");
+        codesContainer.appendChild(el)
+    }
 }
 
 
