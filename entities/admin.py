@@ -4,7 +4,19 @@ from django.contrib.auth.admin import UserAdmin
 from entities.models import CustomUser
 from entities.project_models import *
 
-admin.site.register(CustomUser, UserAdmin)
+class CustomUserAdmin(UserAdmin):
+    # Add the new field to fieldsets to make it editable in the admin
+    fieldsets = UserAdmin.fieldsets + (
+        (None, {'fields': ('outlet',)}),
+    )
+
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        (None, {'fields': ('outlet',)}),
+    )
+    list_display = UserAdmin.list_display + ('outlet',)
+
+# Register the custom user admin
+admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Client)
 admin.site.register(OutletType)
 admin.site.register(Outlet)
