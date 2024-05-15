@@ -2,7 +2,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import UniqueConstraint
 
-from entities.models import Order
+from entities.project_models import Order
 
 
 class ServiceOrder(models.Model):

@@ -2,7 +2,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import UniqueConstraint
 
-from entities.models import Item
+from entities.project_models import Item
 
 
 class ServiceTypeNeededItem(models.Model):

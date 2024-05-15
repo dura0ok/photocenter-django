@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import UniqueConstraint
 
-from entities.models import Order, Item
+from entities.project_models import Order, Item
 
 
 class SaleOrder(models.Model):

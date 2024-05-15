@@ -1,6 +1,6 @@
 from django.db import models
 
-from entities.models import Branch
+from entities.project_models import Branch
 
 
 class Kiosk(models.Model):

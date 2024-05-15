@@ -1,6 +1,6 @@
 from django.db import models
 
-from entities.models import Outlet
+from entities.project_models import Outlet
 
 
 class PhotoStore(models.Model):

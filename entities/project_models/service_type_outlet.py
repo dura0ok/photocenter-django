@@ -1,6 +1,6 @@
 from django.db import models
 
-from entities.models import OutletType, ServiceType
+from entities.project_models import OutletType, ServiceType
 
 
 class ServiceTypeOutlet(models.Model):

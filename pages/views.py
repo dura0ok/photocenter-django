@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 
-from entities.models import *
+from entities.project_models import *
 from queries.urls import QUERIES_NUMBER
 
 

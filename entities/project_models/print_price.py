@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import UniqueConstraint
 
-from entities.models import PaperSize, PaperType
+from entities.project_models import PaperSize, PaperType
 
 
 class PrintPrice(models.Model):

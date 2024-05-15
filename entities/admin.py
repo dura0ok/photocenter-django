@@ -1,9 +1,10 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 
-from entities.custom_user import CustomUser
-from entities.models import *
+from entities.models import CustomUser
+from entities.project_models import *
 
-
+admin.site.register(CustomUser, UserAdmin)
 admin.site.register(Client)
 admin.site.register(OutletType)
 admin.site.register(Outlet)

@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import UniqueConstraint
 
-from entities.models.firm import Firm
+from entities.project_models.firm import Firm
 
 
 class Item(models.Model):

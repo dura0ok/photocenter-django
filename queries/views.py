@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.shortcuts import render
 from django.views import View
 
-from entities.models import OutletType, Outlet, Item
+from entities.project_models import OutletType, Outlet, Item
 from .helpers import *
 
 
