@@ -46,14 +46,14 @@ const onServiceInputChange = (inputTarget) => {
     const selectedEl = select.options[select.selectedIndex]
     let codesContainer = serviceWrapper.querySelector(`${codesContainerClass}`)
 
-    if(selectedEl.value !== "Проявка плёнки"){
-        if(codesContainer){
+    if (selectedEl.value !== "Проявка плёнки") {
+        if (codesContainer) {
             codesContainer.remove()
         }
         return
     }
     debugger;
-    if(!codesContainer){
+    if (!codesContainer) {
         const newCodesContainer = document.createElement('div')
         newCodesContainer.classList.add(`${codesContainerClass}`)
         serviceWrapper.appendChild(newCodesContainer)
@@ -62,18 +62,17 @@ const onServiceInputChange = (inputTarget) => {
     console.log(codesContainer, codesContainer.querySelectorAll('input'))
     codesContainer.querySelectorAll('input').forEach(el => el.remove())
 
-    for(let i = 0; i < quantity; i++) {
+    for (let i = 0; i < quantity; i++) {
         const el = document.createElement("input");
         codesContainer.appendChild(el)
     }
 }
 
 
-
 const servicesData = [
-            { name: "Ретушь", price: 50 },
-            { name: "Фото на Паспорт", price: 100 },
-            { name: "Проявка плёнки", price: 10 }
+    {name: "Ретушь", price: 50},
+    {name: "Фото на Паспорт", price: 100},
+    {name: "Проявка плёнки", price: 10}
 ];
 
 

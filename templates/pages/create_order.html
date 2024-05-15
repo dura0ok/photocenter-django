@@ -4,40 +4,40 @@
 {% block content %}
     <div class="order-creation-wrapper">
         <h1>Создание заказа</h1>
-       <form>
-        <div class="general-info">
-            <label>
-                Выбор клиента:
-                <select id="client">
-                <option value="client1">Клиент 1</option>
-                <option value="client2">Клиент 2</option>
-                <option value="client3">Клиент 3</option>
-            </select>
-            </label>
-            <label><input type="checkbox" id="urgent">Срочный заказ</label>
-        </div>
-        <div class="services-info">
-            <label>Выбор услуг:</label>
-            <div class="services">
+        <form>
+            <div class="general-info">
+                <label>
+                    Выбор клиента:
+                    <select id="client">
+                        <option value="client1">Клиент 1</option>
+                        <option value="client2">Клиент 2</option>
+                        <option value="client3">Клиент 3</option>
+                    </select>
+                </label>
+                <label><input type="checkbox" id="urgent">Срочный заказ</label>
+            </div>
+            <div class="services-info">
+                <label>Выбор услуг:</label>
+                <div class="services">
 
+                </div>
+                <button class="service-create-btn">Добавить услугу</button>
             </div>
-            <button class="service-create-btn">Добавить услугу</button>
-        </div>
-        <div class="print-info">
-            <label>Печать фотографий:</label>
-            <div id="photos">
+            <div class="print-info">
+                <label>Печать фотографий:</label>
+                <div id="photos">
 
+                </div>
+                <button class="photo-create-btn">Добавить фото</button>
             </div>
-             <button class="photo-create-btn">Добавить фото</button>
-        </div>
-        <div>
-            <label>Продажа товаров:</label>
-            <div id="products">
+            <div>
+                <label>Продажа товаров:</label>
+                <div id="products">
+                </div>
+                <button class="item-create-btn">Добавить товар</button>
             </div>
-            <button class="item-create-btn">Добавить товар</button>
-        </div>
-        <button type="submit" class="order-create-btn">Добавить заказ</button>
-    </form>
+            <button type="submit" class="order-create-btn">Добавить заказ</button>
+        </form>
 
 
     </div>
