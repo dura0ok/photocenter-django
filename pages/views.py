@@ -1,9 +1,14 @@
+import json
+
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView, LogoutView
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 
 from entities.project_models import *
 from queries.urls import QUERIES_NUMBER
@@ -21,17 +26,35 @@ def get_queries_list(request):
     return render(request, 'pages/queries.html', context=context)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class CreateOrder(View):
     @staticmethod
     def get(request):
+        outlet_id = request.user.outlet_id
+        storage_items = StorageItem.objects.filter(storage__outlet_id=outlet_id).select_related('item')
+        print_prices = PrintPrice.objects.all()
+
+        service_types = ServiceType.objects.filter(
+            servicetypeoutlet__outlet_type__outlet__id=outlet_id
+        ).distinct()
+
         context = {
             'clients': Client.objects.all(),
+            'services': service_types,
+            'storage_items': storage_items,
+            'print_prices': print_prices,
         }
         return render(request, 'pages/create_order.html', context=context)
 
     @staticmethod
     def post(request):
-        pass
+        data = json.loads(request.body)
+        for service in data['services']:
+            print(service)
+            service_id = service['option']
+            count = service['count']
+
+        return JsonResponse({'success': True})
 
 
 class CustomAuthenticationForm(AuthenticationForm):

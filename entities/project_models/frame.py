@@ -16,12 +16,10 @@ class Frame(models.Model):
         db_comment='Количество копий'
     )
 
-    film = models.ForeignKey(
-        'Film',
-        on_delete=models.CASCADE,
-        verbose_name='Плёнка',
-        db_comment='Связь с пленкой',
-        help_text='Кадр на какой пленке?'
+    code = models.CharField(
+        verbose_name='Код',
+        help_text='Уникальный код фотопленки',
+        max_length=255,
     )
 
     frame_number = models.IntegerField(
