@@ -3,12 +3,15 @@ RETURNS NUMERIC AS $$
 DECLARE
     new_price NUMERIC;
 BEGIN
+    IF discount_percent <= 0 THEN
+        RETURN current_price;
+    END IF;
     new_price := current_price * (1 - discount_percent / 100);
     RETURN new_price;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION calculate_frames_cost(frames JSONB)
+CREATE OR REPLACE FUNCTION calculate_print_cost(frames JSONB)
     RETURNS NUMERIC AS
 $$
 DECLARE
@@ -75,7 +78,7 @@ BEGIN
     END IF;
 
     RAISE NOTICE 'JSON %', frames_elements;
-    RETURN calculate_frames_cost(frames_elements);
+    RETURN calculate_print_cost(frames_elements);
 END;
 $$ LANGUAGE plpgsql;
 

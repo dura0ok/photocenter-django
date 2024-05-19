@@ -1,46 +1,97 @@
 import Toastify from 'toastify-js'
-import "toastify-js/src/toastify.css"
-
- function onAlpineReady() {
+import {showErrorToast} from "./toasts";
+function onAlpineReady() {
         Alpine.data("app", function () {
           return {
-            submitButtonLabel: "Отправить",
+            status: '',
+            submitButtonLabel: "Кастомный текст кнопки",
             components: {
               services: [],
-              film: [],
+              items: [],
               print: [],
             },
-            onSubmit() {
+            clients: "",
+            urgency: false,
+            getJson() {
               const result = {};
 
               Object.keys(this.components).map((key) => {
-                const mappedDivs = this.components[key].map((div) => {
-                  const newDiv = { ...div };
-                  if (div.dropdownValues.length === 0) {
-                    delete newDiv.dropdownValues;
-                  }
+                const mappedDivs = this.components[key]
+                  .filter((div) => div.count >= 1 && div.option !== "")
+                  .map((div) => {
+                    const newDiv = { ...div };
+                    if (div.dropdownValues.length === 0) {
+                      delete newDiv.dropdownValues;
+                    }
 
-                  if (Object.keys(div.customFields).length === 0) {
-                    delete newDiv.customFields;
-                  }
+                    if (Object.keys(div.customFields).length === 0) {
+                      delete newDiv.customFields;
+                    }
 
-                  return newDiv;
-                });
+                    return newDiv;
+                  });
 
                 result[key] = mappedDivs;
               });
 
+              result.client_id = this.clients;
+              result.urgency = this.urgency
+
+
+              this.status = JSON.stringify(result);
+              console.log(result)
+              //console.log(this.status);
+
+              return result;
+            },
+            onChange() {
+              /**
+               * Кастомная логика
+               */
+              console.log("Кастомная логика!!!");
+
+              const json = this.getJson();
+
+              console.log(`Json из onChange!!!!!!:`, json);
+
               const currentUrl = window.location.href
 
-              console.log(result);
-              console.log(JSON.stringify(result))
-              fetch(currentUrl, {
+              fetch(`${currentUrl}/calculate`, {
                 method: "POST",
-                body: JSON.stringify(result),
+                body: JSON.stringify(json),
                 contentType: 'application/json; charset=utf-8',
               }).then((response) => {
-                response.json().then(r => console.log(r))
+                response.json().then(r => {
+                  if(r['error']){
+                    this.status = ''
+                    showErrorToast(r['error'])
+                    return
+                  }
+
+                  const totalCost =
+                    parseFloat(r['services_cost']) +
+                    parseFloat(r['items_cost']) +
+                    parseFloat(r['print_cost']);
+
+                  // Создание текстовой части с разбивкой стоимостей и общей стоимостью
+                  this.status = `
+                    Стоимость услуг: $${parseFloat(r['services_cost']).toFixed(2)}
+                    Стоимость товаров: $${parseFloat(r['items_cost']).toFixed(2)}
+                    Стоимость печати: $${parseFloat(r['print_cost']).toFixed(2)}
+                    Общая стоимость до скидок и срочности: $${totalCost.toFixed(2)}
+                    Итоговая стоимость $${parseFloat(r['general_cost']).toFixed(2)}
+                  `
+                })
               })
+            },
+            onSubmit() {
+              const data = this.getJson();
+              console.log(data)
+              console.log("onSubmit");
+
+              /**
+               * Логика отправки формы
+               */
             },
           };
         });
@@ -58,7 +109,7 @@ import "toastify-js/src/toastify.css"
 
               this.divs.push({
                 option: "",
-                count: 0,
+                count: 1,
                 dropdownValues: [],
                 customFields: customFields,
               });
@@ -73,6 +124,27 @@ import "toastify-js/src/toastify.css"
 
               div.option = option;
             },
+            onCountChanged(div) {
+              console.log(this.$event.target.value !== "");
+              if (this.$event.target.value !== "" && div.count < 1) {
+                div.count = 1;
+              }
+
+               if (this.maxOptionsCount && this.maxOptionsCount[parseInt(div.option)]) {
+                const maxValue = this.maxOptionsCount[parseInt(div.option)];
+
+                if (maxValue < this.$event.target.value) {
+                  div.count = this.maxOptionsCount[parseInt(div.option)];
+
+                  Toastify({
+                    text: "Превышено максимальное значение для данного элемента",
+                  }).showToast();
+                }
+              }
+
+              this.onChange();
+            },
+
           };
         });
       }

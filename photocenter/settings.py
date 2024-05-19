@@ -29,7 +29,7 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://d2e3-84-237-54-83.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://fb9c-84-237-54-107.ngrok-free.app']
 
 # Application definition
 
