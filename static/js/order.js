@@ -38,7 +38,7 @@ function onAlpineReady() {
                 result.urgency = this.urgency
 
 
-                this.status = JSON.stringify(result);
+                //this.status = JSON.stringify(result);
                 console.log(result)
                 //console.log(this.status);
 
@@ -75,11 +75,11 @@ function onAlpineReady() {
 
                         // Создание текстовой части с разбивкой стоимостей и общей стоимостью
                         this.status = `
-                    Стоимость услуг: $${parseFloat(r['services_cost']).toFixed(2)}
-                    Стоимость товаров: $${parseFloat(r['items_cost']).toFixed(2)}
-                    Стоимость печати: $${parseFloat(r['print_cost']).toFixed(2)}
-                    Общая стоимость до скидок и срочности: $${totalCost.toFixed(2)}
-                    Итоговая стоимость $${parseFloat(r['general_cost']).toFixed(2)}
+                    Стоимость услуг: $${parseFloat(r['services_cost']).toFixed(2)} <br>
+                    Стоимость товаров: $${parseFloat(r['items_cost']).toFixed(2)} <br>
+                    Стоимость печати: $${parseFloat(r['print_cost']).toFixed(2)} <br>
+                    Общая стоимость до скидок и срочности: $${totalCost.toFixed(2)} <br>
+                    Итоговая стоимость $${parseFloat(r['general_cost']).toFixed(2)} <br>
                   `
                     })
                 })

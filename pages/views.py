@@ -116,11 +116,9 @@ def calculate_creating_order(request):
         cur_price *= 2
 
     client_id = data['client_id']
-    if client_id == '':
-        return JsonResponse({"error": "client_id cannot be empty"})
-
-    client = Client.objects.get(id=int(data['client_id']))
-    cur_price = apply_discount(cur_price, client.discount)
+    if client_id != '':
+        client = Client.objects.get(id=int(data['client_id']))
+        cur_price = apply_discount(cur_price, client.discount)
 
     response = {
         "services_cost": services_cost,
@@ -178,7 +176,7 @@ class CreateOrder(View):
                         service_type=ServiceType.objects.get(id=service['option']),
                         count=int(service['count'])
                     )
-                    if service['dropdownValues']:
+                    if 'dropdownValues' in service:
                         for c in service['dropdownValues']:
                             Film.objects.create(
                                 code=c,

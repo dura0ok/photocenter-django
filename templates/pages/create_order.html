@@ -10,36 +10,32 @@
                 <div>
                     <h4 x-text="title"></h4>
 
-
                     <template x-for="(div, divIndex) of divs" :key="divIndex">
-                        <div>
-                            <select @change="onChange" x-model="div.option">
+                        <div class="form-group">
+                            <select @change="onChange" x-model="div.option" class="form-control">
                                 <option disabled value="">Выберите значение</option>
-                                <template
-                                        x-for="option in availableOptions"
-                                        :key="option.value"
-                                >
+                                <template x-for="option in availableOptions" :key="option.value">
                                     <option
-                                            x-bind:disabled="uniqueOptions && divs.find((div) => parseInt(div.option) === option.value) !== undefined"
-                                            x-bind:value="option.value"
-                                            x-text="option.label"
+                                        :disabled="uniqueOptions && divs.find((div) => parseInt(div.option) === option.value) !== undefined"
+                                        :value="option.value"
+                                        x-text="option.label"
                                     ></option>
                                 </template>
                             </select>
                             <input
-                                    @input="onCountChanged(div)"
-                                    type="number"
-                                    placeholder="Количество"
-                                    x-model="div.count"
+                                @input="onCountChanged(div)"
+                                type="number"
+                                placeholder="Количество"
+                                x-model="div.count"
+                                class="form-control"
                             />
-                            <button @click="onDeleteDiv(divIndex)">Удалить</button>
-                            <template
-                                    x-if="$data.dropdownOption && dropdownOption === parseInt(div.option) && parseInt(div.count) > 0"
-                            >
+                            <button @click="onDeleteDiv(divIndex)" class="btn btn-danger">Удалить</button>
+
+                            <template x-if="$data.dropdownOption && dropdownOption === parseInt(div.option) && parseInt(div.count) > 0">
                                 <div>
                                     <template x-for="i in parseInt(div.count)" :key="i">
                                         <div>
-                                            <input type="text" @change="onChange" x-model="div.dropdownValues[i - 1]"/>
+                                            <input type="text" @change="onChange" x-model="div.dropdownValues[i - 1]" class="form-control"/>
                                         </div>
                                     </template>
                                 </div>
@@ -47,17 +43,15 @@
 
                             <template x-if="$data.customFields && customFields.length > 0">
                                 <div>
-                                    <template
-                                            x-for="(customField, customFieldIndex) in customFields"
-                                            :key="customFieldIndex"
-                                    >
+                                    <template x-for="(customField, customFieldIndex) in customFields" :key="customFieldIndex">
                                         <div>
                                             <input
-                                                    @change="onSubmit"
-                                                    type="text"
-                                                    x-model="div.customFields[customField.name]"
-                                                    x-bind:placeholder="customField.placeholder"
-                                                    x-bind:value="customField.initialValue"
+                                                @change="onSubmit"
+                                                type="text"
+                                                x-model="div.customFields[customField.name]"
+                                                :placeholder="customField.placeholder"
+                                                :value="customField.initialValue"
+                                                class="form-control"
                                             />
                                         </div>
                                     </template>
@@ -66,106 +60,96 @@
                         </div>
                     </template>
 
-                    <!-- asdf -->
-                    <!-- <div>
-
-                      </div> -->
-                    <!-- </template> -->
-                    <button @click="onAddDiv" x-text="addButtonLabel"></button>
+                    <button @click="onAddDiv" class="btn btn-primary" x-text="addButtonLabel"></button>
                 </div>
             </div>
         </template>
 
         <div x-data="app">
-            <div x-text="status"></div>
+            <div x-html="status" class="status-text"></div>
+
+            <!-- Services Component -->
             <x-component
-                    template="optionsSelector"
-                    x-data="{
-        getJson: getJson,
-        onChange: onChange,
-        title: 'Услуги',
-        divs: components.services,
-        uniqueOptions: true,
-        addButtonLabel: 'Добавить услугу',
-        dropdownOption: 3,
-        maxOptionsCount: {
-          1: 5
-        },
-        availableOptions: [
-                {% for service in services %}
-        {
-            label: '{{ service.name }} - {{ service.price }}',
-            value: {{ service.id }},
-        },
-        {% endfor %}]
-    }"
+                template="optionsSelector"
+                x-data="{
+                    getJson: getJson,
+                    onChange: onChange,
+                    title: 'Услуги',
+                    divs: components.services,
+                    uniqueOptions: true,
+                    addButtonLabel: 'Добавить услугу',
+                    dropdownOption: 3,
+                    maxOptionsCount: { 1: 5 },
+                    availableOptions: [
+                        {% for service in services %}
+                        { label: '{{ service.name }} - {{ service.price }}', value: {{ service.id }} },
+                        {% endfor %}
+                    ]
+                }"
             ></x-component>
 
+            <!-- Items Component -->
             <x-component
-                    template="optionsSelector"
-                    x-data="{
-        onChange: onChange,
-        getJson: getJson,
-        title: 'Товар',
-        divs: components.items,
-        uniqueOptions: true,
-        addButtonLabel: 'Добавить пленку',
-
-
-        availableOptions: [
-        {% for storage_item in storage_items %}
-        {
-            label: '{{ storage_item.item.product_name }} - {{ storage_item.item.price }}',
-            value: {{ storage_item.id }},
-        },
-        {% endfor %}]
-    }"
+                template="optionsSelector"
+                x-data="{
+                    onChange: onChange,
+                    getJson: getJson,
+                    title: 'Товар',
+                    divs: components.items,
+                    uniqueOptions: true,
+                    addButtonLabel: 'Добавить пленку',
+                    availableOptions: [
+                        {% for storage_item in storage_items %}
+                        { label: '{{ storage_item.item.product_name }} - {{ storage_item.item.price }}', value: {{ storage_item.id }} },
+                        {% endfor %}
+                    ]
+                }"
             ></x-component>
 
+            <!-- Print Component -->
             <x-component
-                    template="optionsSelector"
-                    x-data="{
-        onChange: onChange,
-        getJson: getJson,
-        title: 'Печать',
-        divs: components.print,
-        uniqueOptions: false,
-        addButtonLabel: 'Добавить печать',
-        availableOptions: [
-        {% for print_price in print_prices %}
-        {
-            label: '{{ print_price }}',
-            value: {{ print_price.id }},
-        },{% endfor %}],
-        customFields: [  {
-            placeholder: 'Номер кадра',
-            name: 'frame_number',
-            initialValue: '1',
-        }]
-    }"
+                template="optionsSelector"
+                x-data="{
+                    onChange: onChange,
+                    getJson: getJson,
+                    title: 'Печать',
+                    divs: components.print,
+                    uniqueOptions: false,
+                    addButtonLabel: 'Добавить печать',
+                    availableOptions: [
+                        {% for print_price in print_prices %}
+                        { label: '{{ print_price }}', value: {{ print_price.id }} },
+                        {% endfor %}
+                    ],
+                    customFields: [
+                        { placeholder: 'Номер кадра', name: 'frame_number', initialValue: '1' }
+                    ]
+                }"
             ></x-component>
 
-            <br/>
-            <br/>
+            <br/><br/>
 
-            <select x-model="clients" @change="onChange">
+            <!-- Clients Selection -->
+            <select x-model="clients" @change="onChange" class="form-control">
                 <option disabled value="">Выберите значение</option>
                 <option value="1">Клиент 1</option>
             </select>
 
-            <label>
-                <input x-model="urgency" type="checkbox" @change="onChange">
+            <!-- Urgency Checkbox -->
+            <label class="form-check-label">
+                <input x-model="urgency" type="checkbox" @change="onChange" class="form-check-input">
                 Срочность
             </label>
 
-            <br/>
-            <br/>
-            <button @click="onSubmit" x-text="submitButtonLabel"></button>
+            <br/><br/>
+
+            <!-- Submit Button -->
+            <button @click="onSubmit" class="btn btn-success" x-text="submitButtonLabel"></button>
         </div>
     </div>
 
-
 {% endblock %}
+
 
 {% block scripts %}
     <script src="{% static 'dist/order.js' %}"></script>
