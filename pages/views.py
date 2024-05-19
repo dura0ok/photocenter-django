@@ -2,6 +2,7 @@ import json
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView, LogoutView
+from django.db import connection
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -29,6 +30,30 @@ def get_queries_list(request):
 @method_decorator(csrf_exempt, name='dispatch')
 class CreateOrder(View):
     @staticmethod
+    def count_services_cost(service_elements, outlet_id):
+        transformed_services = []
+        for service in service_elements:
+            transformed_service = {
+                'service_type_id': int(service['option']),
+                'amount': int(service['count'])
+            }
+            if 'dropdownValues' in service:
+                transformed_service['codes'] = service['dropdownValues']
+            transformed_services.append(transformed_service)
+
+        transformed_elements = {
+            'services': transformed_services,
+            'outlet_id': outlet_id
+        }
+
+        service_elements_json = json.dumps(transformed_elements)
+
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT calculate_service_type_cost(%s::jsonb)", [service_elements_json])
+            result = cursor.fetchone()[0]
+            return result
+
+    @staticmethod
     def get(request):
         outlet_id = request.user.outlet_id
         storage_items = StorageItem.objects.filter(storage__outlet_id=outlet_id).select_related('item')
@@ -49,10 +74,7 @@ class CreateOrder(View):
     @staticmethod
     def post(request):
         data = json.loads(request.body)
-        for service in data['services']:
-            print(service)
-            service_id = service['option']
-            count = service['count']
+        print(CreateOrder.count_services_cost(data['services'], 1))
 
         return JsonResponse({'success': True})
 

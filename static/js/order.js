@@ -33,6 +33,7 @@ import "toastify-js/src/toastify.css"
               const currentUrl = window.location.href
 
               console.log(result);
+              console.log(JSON.stringify(result))
               fetch(currentUrl, {
                 method: "POST",
                 body: JSON.stringify(result),

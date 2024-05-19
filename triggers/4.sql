@@ -13,8 +13,6 @@ BEGIN
     ELSE
         RAISE EXCEPTION 'Selected outlet cannot provide the selected service type';
     END IF;
-
-    NEW.
         END;
 $$ LANGUAGE plpgsql;
 
