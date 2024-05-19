@@ -1,4 +1,6 @@
 import json
+import traceback
+import uuid
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView, LogoutView
@@ -136,7 +138,7 @@ class CreateOrder(View):
 
     @staticmethod
     def get(request):
-        outlet_id = request.user.outlet_id
+        outlet_id = getattr(request.user, 'outlet_id', 1)
         storage_items = StorageItem.objects.filter(storage__outlet_id=outlet_id).select_related('item')
         print_prices = PrintPrice.objects.all()
 
@@ -155,15 +157,61 @@ class CreateOrder(View):
 
     @staticmethod
     def post(request):
+        outlet_id = getattr(request.user, 'outlet_id', 1)
         data = json.loads(request.body)
         print(data)
-        # Wrap your creation process in a transaction
         try:
+            if data['client_id'] == '':
+                raise ValueError('client_id cannot be empty')
+
             with transaction.atomic():
+                order = Order.objects.create(
+                    client=Client.objects.get(id=data['client_id']),
+                    accept_outlet=Outlet.objects.get(id=outlet_id),
+                    is_urgent=data['urgency']
+                )
+                print(order)
                 services = data['services']
+                for service in services:
+                    service_order = ServiceOrder.objects.create(
+                        order=order,
+                        service_type=ServiceType.objects.get(id=service['option']),
+                        count=int(service['count'])
+                    )
+                    if service['dropdownValues']:
+                        for c in service['dropdownValues']:
+                            Film.objects.create(
+                                code=c,
+                                service_order=service_order
+                            )
+
+                items = data['items']
+
+                for item in items:
+                    SaleOrder.objects.create(
+                        order=order,
+                        item=ServiceType.objects.get(id=item['option']),
+                        amount=int(item['count'])
+                    )
+
+                frames = data['print']
+                if len(frames) > 0:
+                    print_order = PrintOrder.objects.create(order=order)
+                    for frame in frames:
+                        Frame.objects.create(
+                            print_order=print_order,
+                            amount=int(frame['count']),
+                            print_price=PrintPrice.objects.get(id=frame['option']),
+                            frame_number=int(frame['customFields']['frame_number']),
+                            code=uuid.uuid4()
+                        )
+
 
         except Exception as e:
-            return JsonResponse({'error': e})
+            print(e)
+            print(traceback.format_exc())
+
+            return JsonResponse({'error': str(e)})
 
         return JsonResponse({'success': True})
 

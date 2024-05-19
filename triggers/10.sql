@@ -1,5 +1,6 @@
 CREATE OR REPLACE FUNCTION apply_discount(current_price NUMERIC, discount_percent NUMERIC)
-RETURNS NUMERIC AS $$
+    RETURNS NUMERIC AS
+$$
 DECLARE
     new_price NUMERIC;
 BEGIN
@@ -21,24 +22,25 @@ DECLARE
     element         JSONB;
 BEGIN
     -- Calculate the frame count by summing up the amount values in the JSONB array
-    FOR i IN 0..(jsonb_array_length(frames) - 1) LOOP
-        element := frames->i;
-        frame_count := frame_count + (element->>'amount')::INTEGER;
-    END LOOP;
+    FOR i IN 0..(jsonb_array_length(frames) - 1)
+        LOOP
+            element := frames -> i;
+            frame_count := frame_count + (element ->> 'amount')::INTEGER;
+        END LOOP;
 
     RAISE NOTICE 'FRAME COUNT %', frame_count;
 
-    FOR i IN 0..(jsonb_array_length(frames) - 1) LOOP
-        element := frames->i;
-        total_price := total_price + (
-            (element->>'amount')::INTEGER *
-            COALESCE(
-                (SELECT price FROM print_prices WHERE id = (element->>'price_id')::BIGINT),
-                0
-            )
-        );
-    END LOOP;
-
+    FOR i IN 0..(jsonb_array_length(frames) - 1)
+        LOOP
+            element := frames -> i;
+            total_price := total_price + (
+                (element ->> 'amount')::INTEGER *
+                COALESCE(
+                        (SELECT price FROM print_prices WHERE id = (element ->> 'price_id')::BIGINT),
+                        0
+                )
+                );
+        END LOOP;
 
 
     RAISE NOTICE 'BEFORE DISCOUNT % FRAME COUNT %', total_price, frame_count;
@@ -62,14 +64,14 @@ DECLARE
     frames_elements JSONB;
 BEGIN
     SELECT jsonb_agg(
-        jsonb_build_object(
-            'amount', f.amount,
-            'price_id', f.print_price_id
-        )
-    )
+                   jsonb_build_object(
+                           'amount', f.amount,
+                           'price_id', f.print_price_id
+                   )
+           )
     INTO frames_elements
     FROM frames f
-    JOIN print_orders po ON f.print_order_id = po.id
+             JOIN print_orders po ON f.print_order_id = po.id
     WHERE po.order_id = calculate_print_orders_price.order_id;
 
     IF frames_elements IS NULL THEN
@@ -83,83 +85,83 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION calculate_service_type_cost(service_elements JSONB)
-RETURNS NUMERIC AS
+    RETURNS NUMERIC AS
 $$
 DECLARE
-    total_price NUMERIC := 0;
-    item JSONB;
-    cur_code varchar;
+    total_price     NUMERIC := 0;
+    item            JSONB;
+    cur_code        varchar;
     service_type_id BIGINT;
-    amount INTEGER;
-    cur_price NUMERIC;
-    outlet_id BIGINT;
+    amount          INTEGER;
+    cur_price       NUMERIC;
+    outlet_id       BIGINT;
 BEGIN
     -- Extract outlet_id
-    outlet_id := (service_elements->>'outlet_id')::BIGINT;
+    outlet_id := (service_elements ->> 'outlet_id')::BIGINT;
 
     -- Loop through each element in the services array
-    FOR item IN SELECT * FROM jsonb_array_elements(service_elements->'services')
-    LOOP
-        -- Extract service_type_id and amount
-        service_type_id := (item->>'service_type_id')::BIGINT;
-        amount := (item->>'amount')::INTEGER;
+    FOR item IN SELECT * FROM jsonb_array_elements(service_elements -> 'services')
+        LOOP
+            -- Extract service_type_id and amount
+            service_type_id := (item ->> 'service_type_id')::BIGINT;
+            amount := (item ->> 'amount')::INTEGER;
 
-        -- Debugging RAISE NOTICE
-        RAISE NOTICE 'SERVICE TYPE ID %', service_type_id;
+            -- Debugging RAISE NOTICE
+            RAISE NOTICE 'SERVICE TYPE ID %', service_type_id;
 
-        -- Check for specific service type condition
-        IF (SELECT LOWER(st.name) FROM service_types st WHERE st.id = service_type_id) = LOWER('Проявка Плёнки') THEN
-            RAISE NOTICE 'Проявка плёнки';
-            FOR cur_code IN SELECT * FROM jsonb_array_elements_text(item->'codes')
-            LOOP
-                RAISE NOTICE 'Code: % ot_id %', cur_code, outlet_id;
-                IF EXISTS(
-                    SELECT 1
-                    FROM films f
-                    JOIN service_orders so ON so.id = f.service_order_id
-                    JOIN orders o ON so.order_id = o.id
-                    WHERE f.code = cur_code AND o.accept_outlet_id = outlet_id
-                ) THEN
-                    RAISE NOTICE '=====';
-                    amount := amount - 1;
-                END IF;
-            END LOOP;
-        END IF;
+            -- Check for specific service type condition
+            IF (SELECT LOWER(st.name) FROM service_types st WHERE st.id = service_type_id) =
+               LOWER('Проявка Плёнки') THEN
+                RAISE NOTICE 'Проявка плёнки';
+                FOR cur_code IN SELECT * FROM jsonb_array_elements_text(item -> 'codes')
+                    LOOP
+                        RAISE NOTICE 'Code: % ot_id %', cur_code, outlet_id;
+                        IF EXISTS(SELECT 1
+                                  FROM films f
+                                           JOIN service_orders so ON so.id = f.service_order_id
+                                           JOIN orders o ON so.order_id = o.id
+                                  WHERE f.code = cur_code
+                                    AND o.accept_outlet_id = outlet_id) THEN
+                            RAISE NOTICE '=====';
+                            amount := amount - 1;
+                        END IF;
+                    END LOOP;
+            END IF;
 
-        -- Get the price for the service type
-        SELECT price
-        INTO cur_price
-        FROM service_types
-        WHERE id = service_type_id;
+            -- Get the price for the service type
+            SELECT price
+            INTO cur_price
+            FROM service_types
+            WHERE id = service_type_id;
 
-        -- Calculate the total price
-        total_price := total_price + (COALESCE(cur_price, 0) * amount);
-    END LOOP;
+            -- Calculate the total price
+            total_price := total_price + (COALESCE(cur_price, 0) * amount);
+        END LOOP;
 
     RETURN total_price;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION calculate_service_orders_price(order_id BIGINT)
-RETURNS NUMERIC AS
+    RETURNS NUMERIC AS
 $$
 DECLARE
     items JSONB;
 BEGIN
     SELECT jsonb_build_object(
-        'services', COALESCE(
-            (SELECT jsonb_agg(
-                jsonb_build_object(
-                    'amount', so.count,
-                    'service_type_id', st.id
-                )
-            )
-            FROM service_orders so
-            JOIN public.service_types st ON so.service_type_id = st.id
-            WHERE so.order_id = calculate_service_orders_price.order_id), '[]'::jsonb
-        ),
-        'outlet_id', (SELECT accept_outlet_id FROM orders WHERE id = order_id)
-    )
+                   'services', COALESCE(
+                    (SELECT jsonb_agg(
+                                    jsonb_build_object(
+                                            'amount', so.count,
+                                            'service_type_id', st.id
+                                    )
+                            )
+                     FROM service_orders so
+                              JOIN public.service_types st ON so.service_type_id = st.id
+                     WHERE so.order_id = calculate_service_orders_price.order_id), '[]'::jsonb
+                               ),
+                   'outlet_id', (SELECT accept_outlet_id FROM orders WHERE id = order_id)
+           )
     INTO items;
 
     RAISE NOTICE 'items %', items;
@@ -169,30 +171,29 @@ $$ LANGUAGE plpgsql;
 
 
 
-
-
 CREATE OR REPLACE FUNCTION calculate_sale_orders_cost(item_elements JSONB)
     RETURNS NUMERIC AS
 $$
 DECLARE
     total_price NUMERIC := 0;
-    item JSONB;
-    item_id BIGINT;
-    amount INTEGER;
-    cur_price NUMERIC;
+    item        JSONB;
+    item_id     BIGINT;
+    amount      INTEGER;
+    cur_price   NUMERIC;
 BEGIN
     FOR item IN SELECT * FROM jsonb_array_elements(item_elements)
-    LOOP
-        item_id := (item->>'item_id')::BIGINT;
-        RAISE NOTICE 'ITEM ID %', item_id;
-        amount := (item->>'amount')::INTEGER;
+        LOOP
+            item_id := (item ->> 'item_id')::BIGINT;
+            RAISE NOTICE 'ITEM ID %', item_id;
+            amount := (item ->> 'amount')::INTEGER;
 
-        SELECT price
-        INTO cur_price
-        FROM items where id = item_id;
+            SELECT price
+            INTO cur_price
+            FROM items
+            where id = item_id;
 
-        total_price := total_price + (COALESCE(cur_price, 0) * amount);
-    END LOOP;
+            total_price := total_price + (COALESCE(cur_price, 0) * amount);
+        END LOOP;
 
     RETURN total_price;
 END;
@@ -204,22 +205,23 @@ $$
 DECLARE
     items JSONB;
 BEGIN
-   SELECT jsonb_agg(
-        jsonb_build_object(
-            'amount', si.quantity,
-            'item_id', si.quantity
-        )
-    )
-    INTO items FROM storage_items si
-        JOIN
-            storage s on si.storage_id = s.id
-        WHERE s.outlet_id = (SELECT accept_outlet_id from orders where id = order_id);
+    SELECT jsonb_agg(
+                   jsonb_build_object(
+                           'amount', si.quantity,
+                           'item_id', si.quantity
+                   )
+           )
+    INTO items
+    FROM storage_items si
+             JOIN
+         storage s on si.storage_id = s.id
+    WHERE s.outlet_id = (SELECT accept_outlet_id from orders where id = order_id);
     RAISE NOTICE 'ITEMS TO SALE %', items;
     RETURN calculate_sale_orders_cost(items);
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION update_order_price(order_id BIGINT, new_price BIGINT)
+CREATE OR REPLACE FUNCTION update_order_price(order_id BIGINT, new_price NUMERIC)
     RETURNS VOID AS
 $$
 BEGIN
@@ -256,9 +258,9 @@ CREATE OR REPLACE FUNCTION calculate_order_price(order_id BIGINT)
     RETURNS NUMERIC AS
 $$
 DECLARE
-    total_price INTEGER := 0;
+    total_price     INTEGER := 0;
     order_client_id BIGINT;
-    order_urgency boolean;
+    order_urgency   boolean;
 BEGIN
     PERFORM 1 FROM orders WHERE id = order_id;
     IF NOT FOUND THEN

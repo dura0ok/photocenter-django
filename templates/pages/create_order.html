@@ -2,85 +2,85 @@
 {% load static %}
 
 {% block content %}
- {% csrf_token %}
+    {% csrf_token %}
 
-
-  <template id="optionsSelector">
-      <div x-data="optionsSelector">
-        <div>
-          <h4 x-text="title"></h4>
-
-
-          <template x-for="(div, divIndex) of divs" :key="divIndex">
-            <div>
-              <select @change="onChange" x-model="div.option">
-                <option disabled value="">Выберите значение</option>
-                <template
-                  x-for="option in availableOptions"
-                  :key="option.value"
-                >
-                  <option
-                    x-bind:disabled="uniqueOptions && divs.find((div) => parseInt(div.option) === option.value) !== undefined"
-                    x-bind:value="option.value"
-                    x-text="option.label"
-                  ></option>
-                </template>
-              </select>
-              <input
-                @input="onCountChanged(div)"
-                type="number"
-                placeholder="Количество"
-                x-model="div.count"
-              />
-              <button @click="onDeleteDiv(divIndex)">Удалить</button>
-              <template
-                x-if="$data.dropdownOption && dropdownOption === parseInt(div.option) && parseInt(div.count) > 0"
-              >
+    <div class="order-creation-wrapper">
+        <template id="optionsSelector">
+            <div x-data="optionsSelector">
                 <div>
-                  <template x-for="i in parseInt(div.count)" :key="i">
-                    <div>
-                      <input type="text" @change="onChange" x-model="div.dropdownValues[i - 1]" />
-                    </div>
-                  </template>
-                </div>
-              </template>
+                    <h4 x-text="title"></h4>
 
-              <template x-if="$data.customFields && customFields.length > 0">
-                <div>
-                  <template
-                    x-for="(customField, customFieldIndex) in customFields"
-                    :key="customFieldIndex"
-                  >
-                    <div>
-                      <input
-                        @change="onSubmit"
-                        type="text"
-                        x-model="div.customFields[customField.name]"
-                        x-bind:placeholder="customField.placeholder"
-                        x-bind:value="customField.initialValue"
-                      />
-                    </div>
-                  </template>
+
+                    <template x-for="(div, divIndex) of divs" :key="divIndex">
+                        <div>
+                            <select @change="onChange" x-model="div.option">
+                                <option disabled value="">Выберите значение</option>
+                                <template
+                                        x-for="option in availableOptions"
+                                        :key="option.value"
+                                >
+                                    <option
+                                            x-bind:disabled="uniqueOptions && divs.find((div) => parseInt(div.option) === option.value) !== undefined"
+                                            x-bind:value="option.value"
+                                            x-text="option.label"
+                                    ></option>
+                                </template>
+                            </select>
+                            <input
+                                    @input="onCountChanged(div)"
+                                    type="number"
+                                    placeholder="Количество"
+                                    x-model="div.count"
+                            />
+                            <button @click="onDeleteDiv(divIndex)">Удалить</button>
+                            <template
+                                    x-if="$data.dropdownOption && dropdownOption === parseInt(div.option) && parseInt(div.count) > 0"
+                            >
+                                <div>
+                                    <template x-for="i in parseInt(div.count)" :key="i">
+                                        <div>
+                                            <input type="text" @change="onChange" x-model="div.dropdownValues[i - 1]"/>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+
+                            <template x-if="$data.customFields && customFields.length > 0">
+                                <div>
+                                    <template
+                                            x-for="(customField, customFieldIndex) in customFields"
+                                            :key="customFieldIndex"
+                                    >
+                                        <div>
+                                            <input
+                                                    @change="onSubmit"
+                                                    type="text"
+                                                    x-model="div.customFields[customField.name]"
+                                                    x-bind:placeholder="customField.placeholder"
+                                                    x-bind:value="customField.initialValue"
+                                            />
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
+                    <!-- asdf -->
+                    <!-- <div>
+
+                      </div> -->
+                    <!-- </template> -->
+                    <button @click="onAddDiv" x-text="addButtonLabel"></button>
                 </div>
-              </template>
             </div>
-          </template>
+        </template>
 
-          <!-- asdf -->
-          <!-- <div>
-
-            </div> -->
-          <!-- </template> -->
-          <button @click="onAddDiv" x-text="addButtonLabel"></button>
-        </div>
-      </div>
-    </template>
-
-    <div x-data="app">
-              <div x-text="status"></div>
-      <x-component
-        template="optionsSelector"
-        x-data="{
+        <div x-data="app">
+            <div x-text="status"></div>
+            <x-component
+                    template="optionsSelector"
+                    x-data="{
         getJson: getJson,
         onChange: onChange,
         title: 'Услуги',
@@ -99,11 +99,11 @@
         },
         {% endfor %}]
     }"
-      ></x-component>
+            ></x-component>
 
-      <x-component
-        template="optionsSelector"
-        x-data="{
+            <x-component
+                    template="optionsSelector"
+                    x-data="{
         onChange: onChange,
         getJson: getJson,
         title: 'Товар',
@@ -117,14 +117,14 @@
         {
             label: '{{ storage_item.item.product_name }} - {{ storage_item.item.price }}',
             value: {{ storage_item.id }},
-        }
+        },
         {% endfor %}]
     }"
-      ></x-component>
+            ></x-component>
 
-      <x-component
-        template="optionsSelector"
-        x-data="{
+            <x-component
+                    template="optionsSelector"
+                    x-data="{
         onChange: onChange,
         getJson: getJson,
         title: 'Печать',
@@ -137,43 +137,41 @@
             label: '{{ print_price }}',
             value: {{ print_price.id }},
         },{% endfor %}],
-        customFields: [ {
-            placeholder: 'Код',
-            name: 'code',
-            initialValue: '',
-        },  {
+        customFields: [  {
             placeholder: 'Номер кадра',
             name: 'frame_number',
             initialValue: '1',
         }]
     }"
-      ></x-component>
+            ></x-component>
 
-      <br />
-      <br />
+            <br/>
+            <br/>
 
-      <select x-model="clients" @change="onChange">
-        <option disabled value="">Выберите значение</option>
-        <option value="1">Клиент 1</option>
-      </select>
+            <select x-model="clients" @change="onChange">
+                <option disabled value="">Выберите значение</option>
+                <option value="1">Клиент 1</option>
+            </select>
 
-        <label>
-        <input x-model="urgency" type="checkbox" @change="onChange">
-        Срочность
-    </label>
+            <label>
+                <input x-model="urgency" type="checkbox" @change="onChange">
+                Срочность
+            </label>
 
-      <br />
-      <br />
-      <button @click="onSubmit" x-text="submitButtonLabel"></button>
+            <br/>
+            <br/>
+            <button @click="onSubmit" x-text="submitButtonLabel"></button>
+        </div>
     </div>
+
 
 {% endblock %}
 
 {% block scripts %}
-     <script src="{% static 'dist/order.js' %}"></script>
-     <!-- Библиотека aplinejs-component для создания переиспользуемых компонентов на Alpine.js -->
-<script defer src="https://unpkg.com/alpinejs-component@latest/dist/component.min.js"></script>
+    <script src="{% static 'dist/order.js' %}"></script>
+    <!-- Библиотека aplinejs-component для создания переиспользуемых компонентов на Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs-component@latest/dist/component.min.js"></script>
 
-<!-- Библиотека Alpine.js последней версии -->
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Библиотека Alpine.js последней версии -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 {% endblock %}

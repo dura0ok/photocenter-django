@@ -13,7 +13,7 @@ BEGIN
     ELSE
         RAISE EXCEPTION 'Selected outlet cannot provide the selected service type';
     END IF;
-        END;
+END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE TRIGGER check_outlet_service_type_trigger

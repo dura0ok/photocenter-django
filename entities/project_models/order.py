@@ -25,10 +25,13 @@ class Order(models.Model):
         db_comment='Когда заказ поступил'
     )
 
-    total_amount_price = models.PositiveSmallIntegerField(
+    total_amount_price = models.DecimalField(
         verbose_name='Суммарный чек',
         help_text='Суммарная цена заказа, которая рассчитывается из купленных товаров, услуг....',
-        db_comment='Суммарная цена заказа, которая рассчитывается из купленных товаров, услуг....'
+        db_comment='Суммарная цена заказа, которая рассчитывается из купленных товаров, услуг....',
+        default=0,
+        max_digits=10,
+        decimal_places=2,
     )
 
     is_urgent = models.BooleanField(

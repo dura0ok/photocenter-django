@@ -50,7 +50,7 @@ class Query2Handler(View):
 
     @staticmethod
     def post(request):
-        outlet_type_id = request.POST.get('outlet')
+        outlet_type_id = request.POST.get('outlet_type')
         start = request.POST.get('start_date')
         end = request.POST.get('end_date')
         try:
