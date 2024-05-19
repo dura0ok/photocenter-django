@@ -9,10 +9,10 @@ class Film(models.Model):
         max_length=255,
     )
 
-    item = models.ForeignKey(
-        'Item',
+    service_order = models.ForeignKey(
+        'ServiceOrder',
         on_delete=models.CASCADE,
-        verbose_name='Информация о пленке',
+        verbose_name='Услуга проявка плёнки',
         null=True
     )
 

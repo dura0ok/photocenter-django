@@ -41,4 +41,4 @@ class Frame(models.Model):
         verbose_name_plural = 'Кадры'
 
     def __str__(self):
-        return f'{self.print_order} - {self.film}'
+        return f'{self.print_order.order} - {self.code}'

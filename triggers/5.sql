@@ -1,10 +1,27 @@
+CREATE OR REPLACE FUNCTION get_discount_id(frame_count INTEGER)
+    RETURNS INTEGER AS
+$$
+DECLARE
+    max_discount_id INTEGER;
+BEGIN
+    SELECT id
+    INTO max_discount_id
+    FROM print_discounts
+    WHERE frame_count >= photo_amount
+    ORDER BY discount DESC
+    LIMIT 1;
+
+    RETURN max_discount_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
 -- Автоматическое проставление скидки
 CREATE OR REPLACE FUNCTION auto_set_print_discount()
     RETURNS TRIGGER AS
 $$
 DECLARE
     frame_count     INTEGER;
-    max_discount    INTEGER;
     max_discount_id INTEGER;
 BEGIN
     RAISE NOTICE '%', NEW;
@@ -17,19 +34,17 @@ BEGIN
     -- Логируем количество кадров
     RAISE NOTICE 'Frame count for order % is %', NEW.print_order_id, frame_count;
 
-    SELECT id, COALESCE(MAX(discount), 0)
-    FROM print_discounts
-    WHERE frame_count >= photo_amount
-    group by id
-    into max_discount_id, max_discount;
+    -- Получаем максимальный discount_id
+    max_discount_id := get_discount_id(frame_count);
 
-    RAISE NOTICE 'Max discount is % for id %', max_discount, max_discount_id;
+    RAISE NOTICE 'Max discount id is %', max_discount_id;
 
     UPDATE print_orders SET discount_id = max_discount_id WHERE id = NEW.print_order_id;
 
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
 
 -- Создаем триггер, который будет вызывать функцию check_print_discount
 CREATE OR REPLACE TRIGGER print_order_discount_check
