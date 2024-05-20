@@ -40,12 +40,12 @@ def build_error_response(message: str) -> JsonResponse:
 
 def validate_date_range(start: Optional[str], end: Optional[str]) -> tuple[date, date]:
     if not (start and end):
-        raise ValueError("start and end must be specified")
+        raise ValueError("Даты должны быть заданы")
     try:
         start_date: datetime.date = datetime.datetime.strptime(start, '%Y-%m-%d').date()
         end_date: datetime.date = datetime.datetime.strptime(end, '%Y-%m-%d').date()
     except ValueError:
-        raise ValueError('Cannot parse date range')
+        raise ValueError('Ошибка формата даты')
     if start_date > end_date:
-        raise ValueError('Start date must be before end date')
+        raise ValueError('Дата начала должна быть раньше конца')
     return start_date, end_date

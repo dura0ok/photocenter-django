@@ -132,7 +132,9 @@
             <!-- Clients Selection -->
             <select x-model="clients" @change="onChange" class="form-control">
                 <option disabled value="">Выберите значение</option>
-                <option value="1">Клиент 1</option>
+                {% for client in clients %}
+                    <option value="{{ client.id }}">{{ client }}</option>
+                {% endfor %}
             </select>
 
             <!-- Urgency Checkbox -->

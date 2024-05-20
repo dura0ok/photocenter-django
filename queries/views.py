@@ -120,8 +120,9 @@ class Query3Handler(View):
                         AND is_urgent = %s
                         AND accept_timestamp BETWEEN %s AND %s;
                 '''
-
-        return build_success_response([execute_query(query, (outlet_type_id, urgency, start, end))])
+        resp = execute_query(query, (outlet_type_id, urgency, start, end), 'Название услуги', 'Срочность', 'Время приёма', 'Имя Клиента')
+        resp.add_value_to_column_by_field(field_name="Время приёма", key="bottomCalc", data="count")
+        return build_success_response([resp])
 
 
 class Query4Handler(View):
