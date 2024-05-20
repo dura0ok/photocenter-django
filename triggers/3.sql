@@ -15,13 +15,13 @@ BEGIN
 
     SELECT capacity INTO capacity_limit FROM storage WHERE id = NEW.storage_id;
     IF capacity_limit IS NULL THEN
-        RAISE EXCEPTION 'Capacity limit of storage undefined';
+        RAISE EXCEPTION 'Определите вместимость склада';
     end if;
 
     RAISE NOTICE 'Total loaded % Add capacity % Capacity limit %', total_quantity, NEW.quantity, capacity_limit;
 
     IF total_quantity + NEW.quantity > capacity_limit THEN
-        RAISE EXCEPTION 'Storage with id % and capacity limit % has exceeded its capacity by % units.',
+        RAISE EXCEPTION 'Хранилище с идентификатором % и ограничением емкости % превысило свою емкость на % единиц.',
             NEW.storage_id, capacity_limit, total_quantity + NEW.quantity - capacity_limit;
     END IF;
 

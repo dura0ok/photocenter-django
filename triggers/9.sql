@@ -9,7 +9,7 @@ BEGIN
                                 JOIN outlet_types ot ON o.type_id = ot.id
                        WHERE o.id = NEW.accept_outlet_id
                          AND ot.name = 'Филиал') THEN
-            RAISE EXCEPTION 'Cannot insert urgent order for non-branch outlet';
+            RAISE EXCEPTION 'Срочный заказ доступен только для филиалов';
         END IF;
     END IF;
     RETURN NEW;

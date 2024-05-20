@@ -23,7 +23,8 @@ BEGIN
     RAISE NOTICE 'Available quantity: %', AVAILABLE_QUANTITY;
 
     IF AVAILABLE_QUANTITY IS NULL OR AVAILABLE_QUANTITY < NEW.amount THEN
-        RAISE EXCEPTION 'Insufficient quantity of item in storage';
+        RAISE EXCEPTION 'Недостаточное количество товара на складе % Доступно %',
+            (select product_name from items where id = NEW.item_id), AVAILABLE_QUANTITY;
     END IF;
 
     UPDATE storage_items

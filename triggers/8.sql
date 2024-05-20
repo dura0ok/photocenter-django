@@ -27,7 +27,11 @@ BEGIN
             END IF;
 
             IF available_quantity < required_materials.count * NEW.count THEN
-                RAISE EXCEPTION 'Not enough materials available on the storage for this service order. Item ID: %, Required Count: %, Available Count: %', required_materials.item_id, required_materials.count, available_quantity;
+                RAISE EXCEPTION 'Недостаточно материалов для производства услуги %. Не хватает товара %, Нужно %, Доступно %',
+                    (SELECT name from service_types where id = NEW.service_type_id),
+                    (select product_name from items where id = required_materials.item_id),
+                    required_materials.count,
+                    available_quantity;
             ELSE
                 RAISE NOTICE 'Material available on the storage for this service order. Item ID: %, Required Count: %, Available Count: %', required_materials.item_id, required_materials.count * NEW.count, available_quantity;
 
