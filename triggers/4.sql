@@ -11,7 +11,7 @@ BEGIN
                  AND ord.id = NEW.order_id) THEN
         RETURN NEW;
     ELSE
-        RAISE EXCEPTION 'Selected outlet cannot provide the selected service type';
+        RAISE EXCEPTION 'Выбранная торговая точка не может предоставить выбранный тип услуги';
     END IF;
 END;
 $$ LANGUAGE plpgsql;

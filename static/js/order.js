@@ -4,7 +4,7 @@ function onAlpineReady() {
     Alpine.data("app", function () {
         return {
             status: '',
-            submitButtonLabel: "Кастомный текст кнопки",
+            submitButtonLabel: "Создать заказ",
             components: {
                 services: [],
                 items: [],

@@ -6,7 +6,11 @@
         <li class="user-dropdown">
             <span class="user-label">
                 {% if user.is_authenticated %}
-                    <p>Welcome, {{ user.username }}!</p>
+                    {% if user.first_name %}
+                    Привет, {{ user.first_name }}!
+                    {% else %}
+                    Привет, {{ user.username }}!
+                    {% endif %}
                 {% else %}
                     <p>Привет, Гость!</p>
                 {% endif %}

@@ -17,7 +17,7 @@ BEGIN
                    FROM vendor_items
                    WHERE vendor_id = delivery_vendor_id
                      AND item_id = NEW.item_id) THEN
-        RAISE EXCEPTION 'Vendor does not supply this item';
+        RAISE EXCEPTION 'Поставщик не поставляет этот товар';
     END IF;
 
     RETURN NEW;

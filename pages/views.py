@@ -4,7 +4,7 @@ import uuid
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView, LogoutView
-from django.db import connection, transaction
+from django.db import connection, transaction, InternalError
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -160,7 +160,7 @@ class CreateOrder(View):
         print(data)
         try:
             if data['client_id'] == '':
-                raise ValueError('client_id cannot be empty')
+                raise ValueError('Укажите клиента')
 
             with transaction.atomic():
                 order = Order.objects.create(
@@ -204,7 +204,11 @@ class CreateOrder(View):
                             code=uuid.uuid4()
                         )
 
-
+        except InternalError as e:
+            err = str(e)
+            res_err = err.split('CONTEXT:')[0].strip()
+            print(res_err)
+            return JsonResponse({'error': res_err})
         except Exception as e:
             print(e)
             print(traceback.format_exc())

@@ -5,7 +5,7 @@ DECLARE
 BEGIN
     SELECT id INTO type_id FROM service_types WHERE name = 'Проявка плёнки';
     IF NOT EXISTS (SELECT 1 FROM service_orders WHERE service_type_id = type_id AND id = NEW.service_order_id) THEN
-        RAISE EXCEPTION 'Service type should be film development order';
+        RAISE EXCEPTION 'Тип Услуги должен быть проявка плёнки';
     END IF;
     RETURN NEW;
 END;
