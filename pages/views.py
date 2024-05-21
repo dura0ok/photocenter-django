@@ -188,7 +188,7 @@ class CreateOrder(View):
                 for item in items:
                     SaleOrder.objects.create(
                         order=order,
-                        item=ServiceType.objects.get(id=item['option']),
+                        item=Item.objects.get(id=item['option']),
                         amount=int(item['count'])
                     )
 

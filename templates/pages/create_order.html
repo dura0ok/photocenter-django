@@ -100,7 +100,7 @@
                     addButtonLabel: 'Добавить пленку',
                     availableOptions: [
                         {% for storage_item in storage_items %}
-                        { label: '{{ storage_item.item.product_name }} - {{ storage_item.item.price }}', value: {{ storage_item.id }} },
+                        { label: '{{ storage_item.item.product_name }} - {{ storage_item.item.price }}', value: {{ storage_item.item.id }} },
                         {% endfor %}
                     ]
                 }"
