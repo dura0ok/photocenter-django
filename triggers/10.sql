@@ -205,17 +205,15 @@ $$
 DECLARE
     items JSONB;
 BEGIN
-    SELECT jsonb_agg(
+   SELECT jsonb_agg(
                    jsonb_build_object(
-                           'amount', si.quantity,
-                           'item_id', si.quantity
+                           'amount', so.amount,
+                           'item_id', so.item_id
                    )
            )
     INTO items
-    FROM storage_items si
-             JOIN
-         storage s on si.storage_id = s.id
-    WHERE s.outlet_id = (SELECT accept_outlet_id from orders where id = order_id);
+    FROM sale_orders so
+             where so.order_id = calculate_sale_orders_price.order_id;
     RAISE NOTICE 'ITEMS TO SALE %', items;
     RETURN calculate_sale_orders_cost(items);
 END;
@@ -269,13 +267,13 @@ BEGIN
     END IF;
 
     SELECT calculate_print_orders_price(order_id) + total_price INTO total_price;
-    RAISE NOTICE '%', total_price;
+    RAISE NOTICE 'After print orders calculation %', total_price;
 
     SELECT calculate_service_orders_price(order_id) + total_price INTO total_price;
-    RAISE NOTICE '%', total_price;
+    RAISE NOTICE 'After service orders calculation %', total_price;
 
     SELECT calculate_sale_orders_price(order_id) + total_price INTO total_price;
-    RAISE NOTICE '%', total_price;
+    RAISE NOTICE 'After sale orders calculation %', total_price;
 
     SELECT client_id, is_urgent INTO order_client_id, order_urgency FROM orders where id = order_id;
     total_price := take_into_urgency_to_cost(order_urgency, total_price);
@@ -298,6 +296,8 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Create triggers on all related orders tables to call the update_price_trigger function
+
+
 CREATE OR REPLACE TRIGGER update_price_trigger_for_orders
     AFTER INSERT OR UPDATE OR DELETE
     ON public.sale_orders

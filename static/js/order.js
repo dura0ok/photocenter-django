@@ -45,9 +45,6 @@ function onAlpineReady() {
                 return result;
             },
             onChange() {
-                /**
-                 * Кастомная логика
-                 */
                 console.log("Кастомная логика!!!");
 
                 const json = this.getJson();
@@ -105,6 +102,11 @@ function onAlpineReady() {
                             }
 
                             showToast('Успешно', 'success');
+
+                            setTimeout(() => {
+                                window.location.reload();
+                             }, 5000);
+
                         })
                     },
                 )

@@ -21,7 +21,7 @@
                     <ul>
                         <li><a href="{% url 'index' %}">Главная</a></li>
                         {% if user.is_authenticated %}
-                            <li><a href="/admin">Админка</a></li>
+                            <li><a href="/admin">Административная панель</a></li>
                             <li><a href="{% url 'create_order' %}">Создать заказ</a></li>
                             <li><a href="{% url 'queries_list' %}">Доступные запросы</a></li>
                             <form id="logout-form" action="{% url 'logout' %}" method="post">
